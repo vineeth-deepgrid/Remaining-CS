@@ -1,0 +1,24 @@
+<!-- <div (click)="showPopupFunc()" class="dot"></div> -->
+
+
+<div id="content" [hidden]="!showPopup" #container>
+  <!-- <div id="content" #container> -->
+    <img src="https://news.mit.edu/sites/default/files/download/201810/MIT-Computer-Announce-01-PRESS.jpg" width="100%" height="100px" alt="">
+    <div class="datapoint-popup">
+    Massachusetts Institute of Technology
+    </div>
+    <div class="datapoint-popup-down">
+    <div class="datapoint-popup-address">4900 Meridian Street N,<br>Huntsville, Alabama- 35811-7500<br>(256) 372-5000</div>
+    <div>
+      <img class="social_icon" src="../../assets/svgs/splash-screen/fb_light.svg">
+      <img class="social_icon" src="../../assets/svgs/splash-screen/linkedin_light.svg">
+      <img class="social_icon" src="../../assets/svgs/splash-screen/twitter_light.svg">
+    </div>
+  </div>
+  <img (click)="showPopup=!showPopup" #closer class="showPopup_close" src="../../assets/svgs/geo-tray/cancel-black.svg">
+  <div class="popup-bubble-anchor"></div>    
+</div>
+    
+
+  
+

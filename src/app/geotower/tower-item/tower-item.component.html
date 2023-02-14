@@ -1,0 +1,69 @@
+<!-- <li [ngClass]="{'hide-layer': layer.previewLayer}" class="layer-main" id="{{layer.name}}"
+  *ngFor="let layer of layersList; let i = index;" [ngStyle]="{'z-index': layersList.length-i }"> -->
+  <!-- <app-tower-item-options *ngIf="layer.selected" [layerItemOptActive]="layerItemOptActive" [isGroup]="false" [layerData]="layer" -->
+    <div #draggingTower [ngStyle]="{
+      'width': towerWidth+'px', 
+      'height': layerOptionsHeight+'px',
+      'margin-top': '0px' 
+    }" 
+    class="tower-before-noscroll" [ngStyle]="{'z-index': layerOrder*3}"></div>
+    <!-- class="tower-before-noscroll" [ngStyle]="{'z-index': showLayerCapFun()  ? layerOrder*3+1 : layerOrder*3}"></div> -->
+  <app-tower-item-options *ngIf="layer.selected" [isGroup]="false" [layerData]="layer"
+    [ngStyle]="{'left': towerWidth+'px', 'width': towerOptionsWidth+'px' }"
+    [towerWidth]="towerWidth"
+    [towerOptionsWidth]="towerOptionsWidth"
+    (saveTowerLayer)="saveTowerLayerFun($event)"
+    (previewIsActiveEmit)="previewIsActiveEmit($event)"
+    (collapseRibbon)="_layerOptionActivateEvent($event, layer, false)"
+    [towerId]="towerId" 
+    [isDeleteDisable]="isDeleteDisable"
+    (sliderVal)="sliderValue=$event">
+  </app-tower-item-options>
+  <div [ngClass]="{'hide-layer': layer.previewLayer}" [ngStyle]="{'width': towerWidth+'px' }" class="tower-item-div">
+    <div class="layer opt" [ngStyle]="{'height': layerOptionsHeight+'px', 'margin-top': '-'+(layerOptionsHeight/2)+'px', 'z-index': (layerOrder*3)-1}">
+      <!-- <span [ngStyle]="{'height': layerOptionsHeight+'px', 'background': !isValid(layer.proj) ? 'gray' : '' }" matTooltip="Connection" container="body" id="{{layer.name}}" (click) = "showItemPropertyWindow($event, layer)" style="cursor: pointer;">c</span> -->
+      <span [ngStyle]="{'height': layerOptionsHeight+'px' }" matTooltip="Connection" matTooltipClass="mat-custom-tooltip" container="body"
+        [ngClass]="{'c-disabled': !isConnectionDataAvailable(layer)}"
+        id="{{layer.name}}" (click) = "showItemPropertyWindow($event, layer, CONNECTION_HEADER)" style="cursor: pointer;">c</span>
+      <span [ngStyle]="{'height': layerOptionsHeight+'px' }" matTooltip="Specification" matTooltipClass="mat-custom-tooltip" container="body" id="{{layer.name}}" (click) = "showItemPropertyWindow($event, layer, SPECIFICATION_HEADER)" style="cursor: pointer;">s</span>
+      <span [ngStyle]="{'height': layerOptionsHeight+'px' }" matTooltip="Function" matTooltipClass="mat-custom-tooltip" container="body" id="{{layer.name}}" (click) = "showItemPropertyWindow($event, layer, FUNCTION_HEADER)" style="cursor: pointer;">f</span>
+      <span [ngStyle]="{'height': layerOptionsHeight+'px' }" matTooltip="Depiction" matTooltipClass="mat-custom-tooltip" container="body" id="{{layer.name}}" (click) = "showItemPropertyWindow($event, layer, DEPICTION_HEADER)" style="cursor: pointer;">d</span>
+      <span [ngStyle]="{'height': layerOptionsHeight+'px' }" matTooltip="Interaction" matTooltipClass="mat-custom-tooltip" container="body" id="{{layer.name}}" (click) = "showItemPropertyWindow($event, layer, INTERACTION_HEADER)" style="cursor: pointer;">i</span>
+    </div>
+    <div class="layer name" [ngStyle]="{'height': layerOptionsHeight+'px', 'margin-top': '-'+(layerOptionsHeight/2)+'px', 'z-index': (layerOrder*3)-2}"
+      style="display: inline-flex;direction: ltr;">
+      <span class="layer-option-with-name move">Move</span>
+      <!-- <label class="tower-checkBox">
+        <input type="checkbox" id="{{layer.name}}">
+        <span class="checkmark"></span>
+      </label> -->
+      <span class="layer-option-with-name zoom-to-layer" matTooltip="Zoom to Layer" matTooltipClass="mat-custom-tooltip" (click)="zoomToLayer(layer)"></span>
+      <span class="layer-option-with-name selection" matTooltip="Selection" matTooltipClass="mat-custom-tooltip"></span>
+      <span class="layer-text" matTooltip="{{layer.name}}" matTooltipClass="mat-custom-tooltip">{{layer.name}}</span>
+      <span #towerItemOption (click)="layer.selected = !layer.selected ; _layerOptionActivateEvent($event, layer, layer.selected)" id="{{layer.name}}" class="right-arrow"
+        [ngClass]="{'active':layer.selected}"><img src="/assets/img/right-arrow.svg"></span>
+      <span class="layer-option-with-name raster_vector_toggle" matTooltip="Raster / vector Toggle" matTooltipClass="mat-custom-tooltip"></span>
+      <span [ngClass]="{'toogle_inactive': !layer.previewLayer, 'toggle_active': layer.previewLayer , 'layer-option-with-name': true}"
+      matTooltip="Active / Inactive Toggle" matTooltipClass="mat-custom-tooltip" (click)="showLayer(layer)"></span>
+      <span *ngIf="selectedLayerForPreview === '' || selectedLayerForPreview === layer.name" class="layer-option-with-name preview"
+        matTooltip="Preview" matTooltipClass="mat-custom-tooltip" (click)="showPreviewFun(layer)"></span>
+      <span *ngIf="selectedLayerForPreview !== '' && selectedLayerForPreview !== layer.name" class="layer-option-with-name preview preview-disabled"></span>
+    </div>
+  </div>
+<!-- </li> -->
+<app-connection style="display:none"></app-connection>
+<app-depiction style="display:none"></app-depiction>
+<app-function style="display:none"></app-function>
+<app-interaction style="display:none"></app-interaction>
+<app-specification style="display:none"></app-specification>
+<ng-template #geotowerItemConnectionContent>Connection</ng-template>
+<ng-template #geotowerItemSpecificationContent>Specification</ng-template>
+<ng-template #geotowerItemFunctionContent>Function</ng-template>
+<ng-template #geotowerItemDepictionContent>Depiction</ng-template>
+<ng-template #geotowerItemInteractionContent>Interaction</ng-template>
+
+<ng-template #geotowerItemZoomToLayer>Zoom to Layer</ng-template>
+<ng-template #geotowerItemSelection>Selection</ng-template>
+<ng-template #geotowerItemRasterVectorToggle>Raster / vector Toggle</ng-template>
+<ng-template #geotowerItemActiveInactiveToggle>Active / Inactive Toggle</ng-template>
+<ng-template #geotowerItemPreview>Preview</ng-template>

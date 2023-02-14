@@ -1,0 +1,277 @@
+<div [hidden]="!onPropertiesClicked">
+  <div class="geotray-suboptions-popup-container">
+    <!-- <div class="input-btn-container" ngbDropdown #dropDown="ngbDropdown"> -->
+      <div class="subpopup-btn-container">
+        
+        <div class="container"> 
+          <div  class="submenue-popupclsmin">
+            <img src="../../assets/svgs/geo-tray/minimize.svg" width="20px" height="20px" alt="" style="margin-right:5px; background-color:#bcbcbc; border-radius: 50%;">
+            
+            <img src="../../assets/svgs/geo-tray/cancel-black.svg" width="22px" height="22px" alt="" style="background-color:#bcbcbc; border-radius: 50%;" (click)="onPropertiesClicked = false">
+            
+            
+          </div>
+         
+          <div class="d-lg-flex justify-content-between align-items-center" style="z-index: -1;">
+            <div>
+              
+              <select (change)="changeLayerTypes($event.target.value)" [(ngModel)]="selectedBoundary" class="submenu-popup-options" name="boundry" id="boundry">
+                <!-- <option style="padding-left: 10px;"value="first">Boundry</option>
+                <option value="State">State</option>
+                <option value="County">County</option> -->
+                <option *ngFor="let option of boundaryOptions" [value]="option" >{{option}}</option>
+                
+              </select>
+            </div>
+            <div>
+              
+  
+              <select class="submenu-popup-options" name="attribute" id="attribute"  placeholder="none">
+                <option value="attribute">Attribute</option>
+                <option value="first">First option</option>
+                <option value="second">Second option</option>
+                <option value="third">Third option</option>
+                <option value="fourth">Fourth option</option>
+              </select>
+            </div>
+            <div>
+              
+              <select  class="submenu-popup-options" name="attribute" id="attribute"  placeholder="none">
+                <option value="summary">Summary</option>
+                <option value="count">Count</option>
+                <option value="sum">Sum</option>
+                <option value="avarage">Avarage</option>
+              </select>
+            </div>
+            
+              <div class="input-box" style="height: 53%;">
+                <input type="text" placeholder="Search">
+                <i class="fa fa-search" style="width:10px; height: 10px; top:22px;"></i>                    
+              </div>
+            
+            
+            
+          </div> 
+    </div>
+  </div>
+
+  <mat-expansion-panel   style="background-color: rgba(255, 255, 255, 0.801);  top:0px ; width:100%;     border-radius: 0px 0px 8px 8px; padding: 0 -7px 16px; " (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+
+                         <!-- Predefined==================================== -->
+                         <!-- <mat-expansion-panel-header [hidden]="!onPredefinedClicked" style="height:46px; background-color: #dddddd; border-radius: 0px 0px 0px 0px; height: 30px;">
+        
+                          <mat-panel-description class="d-flex align-items-center" style="justify-content: center;">
+                            <div class="dotpredefined"></div>
+                            <div>HBCUs</div>
+                          </mat-panel-description>
+                        </mat-expansion-panel-header> -->
+
+                        <!-- Classified==================================== -->
+                        <mat-expansion-panel-header [hidden]="!onClassifiedClicked" style="height:50px; background-color: #dddddd; border-radius: 0px 0px 0px 0px; height: 30px;">
+                          <mat-panel-description style="justify-content: center;">
+                            <div [hidden]="classifiedDesc" class="barclassified" style="display: flex; color: white;">
+                              <div style="background-color:#0707f7; height: 15px;
+                              width: 25%; text-align: center;">10></div>
+                              <div style="background-color:#e70ea9; height: 15px;
+                              width: 25%; text-align: center;">5 - 9</div>
+                              <div style="background-color:#ff0e54 ; height: 15px;
+                              width: 25% ;text-align: center;">2 - 5</div>
+                              <div style="background-color:#fa6e19 ; height: 15px;
+                              width: 25% ;text-align: center;">1</div>
+                              <div style="background-color:#ffcb07 ; height: 15px;
+                              width: 25% ;text-align: center;">0</div>
+                            </div>
+                              <div>HBCUs</div>
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <!-- Blended==================================== -->
+                        <mat-expansion-panel-header [hidden]="!onBlendedClicked" style="height:46px; background-color: #dddddd; border-radius: 0px 0px 0px 0px; height: 30px;">
+      
+                          <mat-panel-description style="justify-content: center;">
+                            <div [hidden]="blendedDesc" class="barclassified" style="display: flex; color: white;">
+                              <div class="d-flex justify-content-between" style="background-image: linear-gradient(to right, #ffc72c, #ffad10, #fe9300, #fb7600, #f75500, #f54020, #f12831, #ea003f, #dd005a, #c60075, #a3008c, #720e9e); height: 15px;
+                              width: 100%; padding-left:25px ;padding-right:25px ">
+                              <div>0</div>
+                              <div>HBCU Location Density</div>
+                              <div>6</div>
+                              </div>
+                            </div>
+                              <div>HBCUs</div>
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <!-- Collacated==================================== -->
+                        <mat-expansion-panel-header [hidden]="!onCollocatedClicked" style="height:46px; background-color: #dddddd; border-radius: 0px 0px 0px 0px; height: 30px;">
+      
+                          <mat-panel-description style="justify-content: center;">
+                            <div class="dotC" style="height: 15px;
+                            width: 15px; "></div>
+                            <div style="margin-right: 80px;"><b>4</b></div>
+                            <div class="dotC" style="height: 10px;
+                            width: 10px; margin-top: 2px;"></div>
+                            <div style="margin-right: 80px;"><b>3</b></div>
+                            <div class="dotC" style="height: 5px;
+                            width: 5px; margin-top: 5px;"></div>
+                            <div style="margin-right: 80px;"><b>2</b></div>
+                            <div class="dotC" style="height: 3px;
+                            width: 3px; margin-top: 7px;"></div>
+                            <div style="margin-right: 80px;"><b>1</b></div>
+                  
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <!-- Extended==================================== -->
+                        <mat-expansion-panel-header [hidden]="!onExtendedClicked" style="height:46px; background-color: #dddddd; border-radius: 0px 0px 0px 0px; height: 30px;">
+      
+                          <mat-panel-description style="justify-content: center;">
+                            <!-- <div class="dotExtended" style="height: 15px;
+                            width: 15px; background-color: blue; "></div>
+                            <div style="margin-right: 80px;"><b>4</b></div>
+                            <div class="dotExtended" style="height: 15px;
+                            width: 15px;  background-color: red;"></div>
+                            <div style="margin-right: 80px;"><b>3</b></div>
+                            <div class="dotExtended" style="height: 15px;
+                            width: 15px; background-color: green;"></div>
+                            <div style="margin-right: 80px;"><b>2</b></div> -->
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+      <div class="allimgcards">
+        <div class="card imagecards grow" *ngFor="let popupData of popupDataList">
+          <img class="card-img-top" src={{popupData.src}}   height="100px" width="200px" alt="Card image">
+          <div class="card-img-overlay">
+           <footer class="image-title d-flex justify-content-around align-items-center"> 
+              <div>
+                  <h5 class="card-title">{{popupData.title}}</h5>
+            <p class="card-text" style="font-size: 8px;">
+              {{popupData.text}}</p>
+          </div>            
+           <div>
+              <img (click)="openImage(popupData)" class="down_arrow" src="../../assets/svgs/geo-tray/down-arrow.svg">
+          </div>
+          </footer>
+            </div>
+        </div>
+        </div>
+        
+    </mat-expansion-panel>
+</div> 
+  <!-- Expand Image On Click  ====================== -->
+  <div [hidden]="!showImage" > 
+    <div class="card showImage grow" >
+        <img class="showImage_img"  src={{largPopupData.src}} alt="Card image">
+        <div class="showImage_Address_area d-flex justify-content-between align-items-center">
+        <div class="">{{largPopupData.address1}},<br>{{largPopupData.address2}}<br>{{largPopupData.address3}}</div>
+        <div class="flex justify-content-between align-items-center">
+         <img class="social_icon" src="../../assets/svgs/splash-screen/fb_light.svg">
+         <img class="social_icon" src="../../assets/svgs/splash-screen/linkedin_light.svg">
+         <img class="social_icon" src="../../assets/svgs/splash-screen/twitter_light.svg">
+        </div>
+         </div>
+         <footer class="Big-image-title"> 
+          <h1 class="showImage_college_name">{{largPopupData.title}}</h1>
+        </footer>
+          
+        <img (click)="showImage=false" class="showImage_close" src="../../assets/svgs/geo-tray/cancel_white.svg">
+      </div>
+  </div>
+</div>
+
+       <!-- Predefined==================================== --> 
+<div  [hidden]="!onPredefinedClicked" >
+  <div>
+  <div class="PredefinedClzMin">
+    <img src="../../assets/svgs/geo-tray/minimize.svg" width="20px" height="20px" alt="" style="margin-right:5px; background-color:#bcbcbc; border-radius: 50%;">
+    
+    <img src="../../assets/svgs/geo-tray/cancel-black.svg" width="22px" height="22px" alt="" style="background-color:#bcbcbc; border-radius: 50%;" (click)="onPredefinedClicked=false">
+    
+    
+  </div>
+<mat-expansion-panel   style="background-color: rgba(255, 255, 255, 0.801);  width:40%;  position: absolute; top: 66px; left: 30%;   border-radius:8px; padding: 0 -7px 16px; " (opened)="panelOpenState = true"
+(closed)="panelOpenState = false">
+
+<!-- Predefined==================================== -->
+<mat-expansion-panel-header style="height:46px; background-color: #dddddd; border-radius: 0px 0px 0px 0px; height: 30px;">
+  
+ <mat-panel-description class="d-flex align-items-center" style="justify-content: center;">
+  <div class="barclassified" style="display: flex; color: white;">
+    <div style="display: flex; color: black;">IHEs</div>
+    <div style="background-color:#0707f7; height: 15px;
+    width: 25%; text-align: center;">301></div>
+    <div style="background-color:#e70ea9; height: 15px;
+    width: 25%; text-align: center;">201-300</div>
+    <div style="background-color:#ff0e54 ; height: 15px;
+    width: 25% ;text-align: center;">101-200</div>
+    <div style="background-color:#fa6e19 ; height: 15px;
+    width: 25% ;text-align: center;">51-100</div>
+    <div style="background-color:#ffcb07 ; height: 15px;
+    width: 25% ;text-align: center;">1-50</div>
+  </div>
+   <div class="dotpredefined"></div>
+   <div>HBCUs</div>
+ </mat-panel-description>
+</mat-expansion-panel-header>
+<div class="allimgcards">
+  <div class="card imagecards grow" *ngFor="let popupData of popupDataList">
+    <img class="card-img-top" src={{popupData.src}}   height="100px" width="200px" alt="Card image">
+    <div class="card-img-overlay">
+     <footer class="image-title d-flex justify-content-around align-items-center"> 
+        <div>
+            <h5 class="card-title">{{popupData.title}}</h5>
+      <p class="card-text" style="font-size: 8px;">
+        {{popupData.text}}</p>
+    </div>            
+     <div>
+        <img (click)="openImage(popupData)" class="down_arrow" src="../../assets/svgs/geo-tray/down-arrow.svg">
+    </div>
+    </footer>
+      </div>
+  </div>
+  </div>
+</mat-expansion-panel>
+
+<!-- Expand Image On Click  ====================== -->
+<div [hidden]="!showImage" > 
+  <div class="card showImage grow" >
+      <img class="showImage_img"  src={{largPopupData.src}} alt="Card image">
+      <div class="showImage_Address_area d-flex justify-content-between align-items-center">
+      <div class="">{{largPopupData.address1}},<br>{{largPopupData.address2}}<br>{{largPopupData.address3}}</div>
+      <div class="flex justify-content-between align-items-center">
+       <img class="social_icon" src="../../assets/svgs/splash-screen/fb_light.svg">
+       <img class="social_icon" src="../../assets/svgs/splash-screen/linkedin_light.svg">
+       <img class="social_icon" src="../../assets/svgs/splash-screen/twitter_light.svg">
+      </div>
+       </div>
+       <footer class="Big-image-title"> 
+        <h1 class="showImage_college_name">{{largPopupData.title}}</h1>
+      </footer>
+        
+      <img (click)="showImage=false" class="showImage_close" src="../../assets/svgs/geo-tray/cancel_white.svg">
+    </div>
+</div>
+</div>
+</div>
+
+<!-- Its For Popup only -->
+<div id="content" class="popup-content" [hidden]="!showPopup" #container>
+  <!-- <div id="content" #container> -->
+    <img src={{largPopupData.src}} width="100%" height="100px" alt="">
+    <div class="datapoint-popup">
+    {{largPopupData.title}}
+    </div>
+    <div class="datapoint-popup-down">
+    <div class="datapoint-popup-address">{{largPopupData.address1}},<br>{{largPopupData.address2}}<br>{{largPopupData.address3}}</div>
+    <div>
+      <img class="datapoint-popup-social_icon" src="../../assets/svgs/splash-screen/fb_light.svg">
+      <img class="datapoint-popup-social_icon" src="../../assets/svgs/splash-screen/linkedin_light.svg">
+      <img class="datapoint-popup-social_icon" src="../../assets/svgs/splash-screen/twitter_light.svg">
+    </div>
+  </div>
+  <img (click)="showPopup=!showPopup" #closer class="showPopup_close" src="../../assets/svgs/geo-tray/cancel-black.svg">
+  <div class="popup-bubble-anchor"></div>    
+</div>
+
+<div id="content" class="popup-content-stats" [hidden]="!showStatsPopup">
+  <!-- <div id="content" #container> -->
+    <img src={{alabamaStats}} width="100%" height="100%" alt="">
+  <img (click)="showStatsPopup=!showStatsPopup" #closer class="showPopup_close" src="../../assets/svgs/geo-tray/cancel-black.svg">
+</div>
