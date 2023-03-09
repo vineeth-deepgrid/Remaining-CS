@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="180.622mm" height="180.622mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 18062.22 18062.22"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <font id="FontID0" horiz-adv-x="722" font-variant="normal" class="str2" style="fill-rule:nonzero" font-weight="700">
+	<font-face 
+		font-family="Arial">
+		<font-face-src>
+			<font-face-name name="Arial Bold"/>
+		</font-face-src>
+	</font-face>
+   <missing-glyph><path d="M0 0z"/></missing-glyph>
+   <glyph unicode="N" horiz-adv-x="722" d="M73.0008 0l0 716 140.332 0 294.666 -479.834 0 479.834 134.001 0 0 -716 -144.833 0 -290.168 470.665 0 -470.665 -133.998 0z"/>
+  </font>
+  <style type="text/css">
+   <![CDATA[
+    @font-face { font-family:"Arial";font-variant:normal;font-weight:bold;src:url("#FontID0") format(svg)}
+    .str2 {stroke-width:2.15;stroke-miterlimit:22.9256}
+    .str0 {stroke:white;stroke-width:2250.46;stroke-miterlimit:22.9256}
+    .str1 {stroke:white;stroke-width:318.97;stroke-miterlimit:22.9256}
+    .str3 {stroke:white;stroke-width:7.62;stroke-miterlimit:22.9256}
+    .fil0 {fill:none}
+    .fil1 {fill:white}
+    .fnt0 {font-weight:bold;font-size:3552.29px;font-family:'Arial'}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" x="-0.01" y="-0.01" width="18062.22" height="18062.22"/>
+  <g id="_2046885627920">
+   <path class="fil0 str0" d="M12153.21 4247.77c1931.94,1115.42 3122.07,3176.78 3122.07,5407.61 0,3448.56 -2795.61,6244.16 -6244.16,6244.16 -3448.56,0 -6244.17,-2795.6 -6244.17,-6244.16 0,-2230.83 1190.13,-4292.19 3122.08,-5407.61"/>
+   <polygon class="fil1 str1" points="9002.99,5970.76 5684.01,13340.02 9002.99,11764.91 12378.23,13340.02 "/>
+   <text x="7760.95" y="4706.13"  class="fil1 str3 fnt0">N</text>
+  </g>
+ </g>
+</svg>

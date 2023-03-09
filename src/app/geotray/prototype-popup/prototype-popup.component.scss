@@ -1,0 +1,103 @@
+.dot{
+  position: fixed;
+  top: 400px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+#content{
+  position: absolute;
+  top: 235px;
+  left: 860px;
+  background-color: rgba(77, 77, 77, 1);
+}
+.popup-bubble {
+  transform: translate(-50%, -100%);
+  /* Style the bubble. */
+  background-color: rgba(77, 77, 77, 1);
+  position: fixed;
+    top: 0px;
+    left: 0px;
+  border-radius: 5px;
+  font-family: sans-serif;
+  
+  width: 250px;
+  height: 140px;
+  box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.5);
+}
+.datapoint-popup {
+  position: relative;
+  font-size: 12px;
+  bottom: 14px;
+  padding-left: 5px;
+  left: 0px;
+  color: white;
+  margin: 0px;
+  text-align: left;
+  background-color: rgba(77, 77, 77, 0.3);
+  
+}
+.datapoint-popup-address{
+  color: white;
+  margin-top: -10px;
+  font-size: 9px;
+  padding-left: 5px;
+
+}
+.datapoint-popup-down{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* The parent of the bubble. A zero-height div at the top of the tip. */
+.popup-bubble-anchor {
+  /* Position the div a fixed distance above the tip. */
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  left: 50%;
+}
+
+/* This element draws the tip. */
+.popup-bubble-anchor::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Center the tip horizontally. */
+  transform: translate(-50%, 0);
+  /* The tip is a https://css-tricks.com/snippets/css/css-triangle/ */
+  width: 0;
+  height: 0;
+  /* The tip is 8px high, and 12px wide. */
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 20px solid rgba(77, 77, 77, 1);
+}
+
+/* JavaScript will position this div at the bottom of the popup tip. */
+.popup-container {
+  cursor: auto;
+  height: 0;
+  position: absolute;
+  /* The max width of the info window. */
+  width: 200px;
+}
+
+.social_icon{
+  width: 20px;
+  height: 20px;
+}
+.showPopup_close{
+  width: 20px;
+      height: 20px;
+     position: absolute;
+      top: -10px;
+      right: -10px;
+      cursor: pointer;
+      background-color:#bcbcbc;
+       border-radius: 50%;
+}

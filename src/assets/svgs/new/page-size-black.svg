@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Creator: CorelDRAW -->
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="180.622mm" height="180.622mm" version="1.1" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 18062.22 18062.22"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xodm="http://www.corel.com/coreldraw/odm/2003">
+ <defs>
+  <font id="FontID0" horiz-adv-x="703" font-variant="normal" style="fill-rule:nonzero" font-weight="700">
+	<font-face 
+		font-family="Segoe UI">
+		<font-face-src>
+			<font-face-name name="Segoe UI Bold"/>
+		</font-face-src>
+	</font-face>
+   <missing-glyph><path d="M0 0z"/></missing-glyph>
+   <glyph unicode="4" horiz-adv-x="575" d="M464.833 700.168l0 -441.333 83.9994 0 0 -115.334 -83.9994 0 0 -143.5 -140.667 0 0 143.5 -305.166 0 0 120.666c26.9991,30.334 54.9989,63.3329 83.9994,99.3339 29.0005,35.9988 57.0003,73.0005 84.0015,111.167 26.9991,38.0002 52.1654,76.3332 75.4989,114.999 23.1671,38.4994 42.9993,75.3347 59.3323,110.501l143.001 0zm-307.667 -441.333l167 0 0 244.665c-11.3339,-21.1657 -23.6664,-42.6665 -36.9995,-64.3314 -13.3331,-21.6671 -27.3341,-43.0015 -42.0008,-64.0008 -14.6667,-20.9993 -29.4997,-41.3329 -44.4992,-61.0009 -14.9995,-19.6658 -29.4997,-38.1666 -43.5007,-55.3317z"/>
+   <glyph unicode="A" horiz-adv-x="703" d="M695.834 0l-171.835 0 -49.8334 155.833 -248.998 0 -49.3341 -155.833 -171.001 0 255 700.168 187.001 0 249 -700.168zm-257.834 276.834l-75.1683 235.332c-5.49838,17.6666 -9.49896,38.668 -11.8332,63.0001l-3.83201 0c-1.66637,-20.5 -5.66696,-40.8337 -12.1682,-60.9987l-76.1646 -237.334 179.166 0z"/>
+  </font>
+  <style type="text/css">
+   <![CDATA[
+    @font-face { font-family:"Segoe UI";font-variant:normal;font-weight:bold;src:url("#FontID0") format(svg)}
+    .fil0 {fill:none}
+    .fil1 {fill:#47494F}
+    .fnt0 {font-weight:bold;font-size:4626.82px;font-family:'Segoe UI'}
+   ]]>
+  </style>
+ </defs>
+ <g id="Layer_x0020_1">
+  <metadata id="CorelCorpID_0Corel-Layer"/>
+  <rect class="fil0" x="-0.01" y="-0.01" width="18062.22" height="18062.22"/>
+  <g id="_2046322974592">
+   <path class="fil1" d="M14969.14 1128.88l-11876.21 0c-366.46,0 -659.63,351.13 -659.63,790.24l0 14223.99c0,351.13 293.17,790.23 659.63,790.23l11876.21 0c293.17,0 659.79,-439.1 659.79,-790.23l0 -14223.99c0,-439.11 -366.62,-790.24 -659.79,-790.24zm-806.21 14048.63l-10263.63 0 0 -12292.79 10263.63 0 0 12292.79z"/>
+   <text x="6123.54" y="10650.83"  class="fil1 fnt0">A4</text>
+  </g>
+ </g>
+</svg>
