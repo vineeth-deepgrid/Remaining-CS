@@ -122,6 +122,7 @@ $center-controller-width : 132; // 112;
               background-size: 18px 10px;
               background-repeat: no-repeat;
               background-position: center;
+              transform: rotate(180deg);
             }
 
             .rectdropdown {
@@ -154,6 +155,7 @@ $center-controller-width : 132; // 112;
               background-size: 18px 10px;
               background-repeat: no-repeat;
               background-position: center;
+              transform: rotate(180deg);
             }
 
             .angdropdown {

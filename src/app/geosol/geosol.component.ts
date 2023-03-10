@@ -289,6 +289,7 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
   escapeKeyPressed(event: KeyboardEvent): any {
     console.log('esc clicked, geotray', event);
     this.resetSelectedOption();
+    this.showFrameworkForm = false;
   }
   resetSelectedOption(): void {
     this.selectedOption = '';
@@ -317,6 +318,7 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
       }
       this.selectedOption = currOption;
       showAwareness = true;
+      this.showFrameworkForm =  false;
     }
     if (currOption === 'awareness') {
       const viewMode = {
@@ -340,6 +342,7 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
     if (this.selectedOption === 'referencing') {
       console.log('GEO REF ENABLED');
       this.observ.updateGeorefToggleStatus(true);
+      this.showFrameworkForm = false;
     } else {
       console.log('GEO REF DISABLED');
       this.observ.updateGeorefToggleStatus(false);

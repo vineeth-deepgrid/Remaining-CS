@@ -117,7 +117,10 @@ export class GeobarComponent
   triggerselectedReferenceSystem = true;
   public globalInputValue: string;
   public globalRectValue: any[];
-  validatedsearch = true;
+  validatedsearch = false;
+  showangulardropdown: boolean = false;
+  radioButtonState: boolean = false;
+  showrectangulardropdown: boolean = false;
 
   public openPdf() {
     console.log('opening pdf in new tab!');
@@ -168,9 +171,6 @@ export class GeobarComponent
   @Output() toggleAwareness: EventEmitter<any> = new EventEmitter<any>();
   lastClickHappend: number = new Date().getTime();
   @Input() isGuest = true;
-  // showConceptSplashScreen = false;
-  // showGeoReferencingScreen: boolean;
-  // minimizedGeoRefWindow: boolean;
   @ViewChild('geoRefWindow') geoRefWindow: ElementRef<HTMLDivElement>;
   showTooltip = true;
   @Output() triggerToShowFeSpalsh: EventEmitter<any> = new EventEmitter<any>();
@@ -213,8 +213,6 @@ export class GeobarComponent
       },
     },
   ];
-
-  //@Input() globalObject: any = {};
   @Input() currentSession: any = {};
   @Input() userClickOnMap = '';
   @Input() userInfo: any = {};
@@ -235,7 +233,6 @@ export class GeobarComponent
   @ViewChild('layerStatus') layerStatus: ElementRef<HTMLDivElement>;
   showFilePickerOptions = false;
   showAwsFilePicker: boolean;
-  //isGuest = true;
   showLatLongTrigger = false;
   showLatLongCombinations: boolean;
   showDropDownWithOptions: boolean;
@@ -262,15 +259,12 @@ export class GeobarComponent
   page = 'Page-1';
   arrraydata = [];
   PDFURL: [];
-
   geoSessionsList: any[] = [];
   geoSessionDataColleced: boolean;
   afterLoginOperations: any[] = [];
-
   showCfmWindow = false;
   @ViewChild('cfmWindow') cfmWindow: ElementRef<HTMLDivElement>;
   minimizedWindow: boolean;
-
   showUcrWindow = false;
   @ViewChild('ucrWindow') ucrWindow: ElementRef<HTMLDivElement>;
   minimizedUcrWindow: boolean;
@@ -305,10 +299,6 @@ export class GeobarComponent
   siteSavingStatus = '';
   @ViewChild('markerTail') markerTail: ElementRef<HTMLSpanElement>;
   markerTailLayer: OlOverlay;
-
-  // ENABLE THIS ON CLICK MAP => MOVE MARKER
-  // watchOnPolygonChanges: Subject<any> = new Subject<any>();
-
   constructor(
     private baseMapService: BasemapService,
     private renderer: Renderer2,
@@ -331,25 +321,16 @@ export class GeobarComponent
         this.onSearch(this.globalInputValue, this.globalInputValue);
       }
     });
-
-    // this.authObsr.subscribeToGetCoordinateSystem('GeobarComponent', (data) => {
-    //   // console.log('RECEIVED reference system name...');
-    //   //console.log(data);
-    //   this.currentCoordinateSystem = data.name;
-    // });
     this.authObsr.subscribeForErrors('GeobarComponent', (data) => {
       console.log('RECEIVED AND ERROR...');
       console.log(data);
-      // this.alertComponent.setAlertMessage(data);
       this._getAlertMessage(this.alertComponent, data);
     });
     this.authObsr.subscribeForDuplicateErrors('GeobarComponent', (data) => {
       console.log('RECEIVED AND ERROR...');
       console.log(data);
-      // this.alertComponent.setAlertMessage(data);
       this.hideLayerUploadStatus('Duplicate found.');
     });
-
     if (this.commonService.isValid(localStorage.getItem('token'))) {
       this.isGuest = false;
     } else {
@@ -397,7 +378,6 @@ export class GeobarComponent
       }
     });
   }
-
   ngOnDestroy(): any {
     this.authObsr.unSubscribeForErrors('GeobarComponent');
     this.authObsr.unSubscribeForAuthStatus('GeobarComponent');
@@ -408,11 +388,6 @@ export class GeobarComponent
       this.baseMapService.projectionsList[8].projection
     ) {
     }
-    // console.log('IN GEOBAR MAP CLICK DETECTED');
-
-    // console.log(changes);
-    // console.log(this);
-
     // EXCEL=================================
     if (FileUtil.checkUpload === true) {
       // this.showPDF = true;
@@ -452,7 +427,6 @@ export class GeobarComponent
       }
     });
   }
-
   createFrameworkGroup() {
     this.frameworkForm = this.formBuilder.group({
       framework: new FormControl('Angular'),
@@ -462,19 +436,6 @@ export class GeobarComponent
   }
   ngAfterViewInit(): void {
     console.log(FileUtil.checkExcelData({}), 'check data');
-
-    // ENABLE THIS ON CLICK MAP => MOVE MARKER
-
-    // if (this.globalObject.pageType === 'COVID19') {
-    //   setTimeout(() => {
-    //     this.initializeMarkerToLocationForCovidPage(true);
-    //   }, 500);
-    //   this.baseMapService.getCurrentBasemap().on('contextmenu', (evt) => {
-    //     console.log(evt);
-    //     evt.preventDefault();
-    //     this.moveMarkerToLocationForCovidPage(evt.coordinate[1], evt.coordinate[0], false);
-    //   });
-    // }
   }
   closeOperationsMenu(): void {
     this.showDropDownWithOptions = false;
@@ -487,41 +448,33 @@ export class GeobarComponent
     this.clearAllGeobarItems(event);
     this.closePreviousMarkers();
   }
-
-  radioButtonState: boolean = false;
-
-  showrectangulardropdown: boolean = false;
-
   openrectangulardropdown() {
     this.showrectangulardropdown = !this.showrectangulardropdown;
+    this.showangulardropdown = false;
   }
-
-  showangulardropdown: boolean = false;
-
   openangulardropdown() {
     this.showangulardropdown = !this.showangulardropdown;
+    this.showrectangulardropdown = false;
   }
-
   angularepsg = 'EPSG:4326';
   rectangularepsg = 'EPSG:3857';
-
-  epsgChangeEvent(epsgCode, id): any {
+  epsgCodee: any;
+  epsgChangeEvent(epsgCode,id): any {
     this.showrectangulardropdown = false;
     this.showangulardropdown = false;
-    console.log(epsgCode,id, 'checkepsg');
+    console.log(epsgCode,id, 'check epsg in geobar');
+    this.epsgCodee = 'EPSG:' + epsgCode;
     if (this.frameworkForm.get('framework').value === 'Angular') {
-      this.angularProjection = epsgCode;
+      this.angularProjection = this.epsgCodee;
+      this.angularepsg = this.epsgCodee;
       this.currentCoordinateSystem = this.angularProjection;
+      console.log();
     } else if (this.frameworkForm.get('framework').value === 'Rectangular') {
-      this.rectangularProjection = epsgCode;
+      this.rectangularProjection = this.epsgCodee;
+      this.rectangularepsg = this.epsgCodee;
       this.currentCoordinateSystem = this.rectangularProjection;
     }
     console.log('selected epsgCode ', epsgCode);
-    if (id === 'angular') {
-      this.angularepsg ='EPSG:' + epsgCode;
-    } else if (id === 'rectangular') {
-      this.rectangularepsg = 'EPSG:' + epsgCode;
-    }
     const index = this.coordinateSystemTypes.findIndex(
       (csSys) => String(csSys.value) === String(epsgCode)
     );
@@ -556,23 +509,12 @@ export class GeobarComponent
       this._closeAlertMessage(this.alertComponent);
     } else {
       // ENABLE THIS ON CLICK MAP => MOVE MARKER
-
-      // // CLOSE PREVIOUS MARKER AND UNLISTEN
-      // // this.closePreviousMarkers();
-      // setTimeout(() => {
-      //   this.moveMarkerToLocationForCovidPage(latValue, lngValue, true);
-      // }, 500);
-
       this.closePreviousMarkers();
       setTimeout(() => {
         this.moveMarkerToLocationForCovidPage(latValue, lngValue);
       }, 500);
     }
-    // setTimeout(() => {
-    //   this.userTryingToLocationSearch = false;
-    // }, 2000);
   }
-
   moveMarkerToLocationForCovidPage(latValue, lngValue): void {
     const coordsList: Array<number> = [lngValue, latValue];
     this.currSiteLocationData = coordsList;
@@ -592,76 +534,7 @@ export class GeobarComponent
     this.markerTailLayer.setPosition([lngValue, latValue]);
     this.markerTailLayer.setElement(this.markerTail.nativeElement);
     this.baseMapService.getCurrentBasemap().addOverlay(this.markerTailLayer);
-    // this.watchOnMarkerClick();
-
-    // this.showAddSiteWindow = true;
   }
-
-  // moveMarkerToLocationForCovidPage(latValue, lngValue, zoomToLayer): void{
-  //   const currentContextInfo: any = {};
-  //   const coordsList: Array<number> = [lngValue, latValue];
-  //   this.currSiteLocationData = coordsList;
-  //   this.currSiteLocationDataToView = this.getLatLongsToShow(coordsList); // [latValue, lngValue];
-  //   const note: any = {
-  //   latitudeLongitude: coordsList
-  //   };
-  //   currentContextInfo.site = note;
-  //   const geometryData = {
-  //   type: this.notePadService.shapeDrawType.POINT, // 'Point',
-  //   coordinates: [Number(note.latitudeLongitude[0]), Number(note.latitudeLongitude[1])]
-  //   };
-  //   const geoJson = {
-  //   features: {
-  //     type: 'FeatureCollection',
-  //     features: [{
-  //       type: 'Feature',
-  //       geometry: geometryData,
-  //       properties: {'' : note.description} // this.currentContextInfo
-  //     }]
-  //   },
-  //   name: `observationInstanceId_${this.tempCreateSiteId}`
-  //   };
-  //   this.notePadService.setSourceOfLayer(geoJson, currentContextInfo, this.watchOnPolygonChanges, zoomToLayer);
-
-  //   this.markerTail.nativeElement.style.display = 'block';
-  //   console.log(this.markerTail.nativeElement);
-  //   this.markerTailLayer.setPosition([lngValue, latValue]);
-  //   this.markerTailLayer.setElement(this.markerTail.nativeElement);
-  //   this.baseMapService.getCurrentBasemap().addOverlay(this.markerTailLayer);
-  // }
-
-  // initializeMarkerToLocationForCovidPage(isFirstTime): void{
-  //   // [78.9629, 20.5937]
-  //   const latValue = 20.5937;
-  //   const lngValue = 78.9629;
-  //   const coordsList: Array<number> = [lngValue, latValue];
-  //   this.currSiteLocationData = coordsList;
-  //   this.currSiteLocationDataToView = this.getLatLongsToShow(coordsList); // [latValue, lngValue];
-  //   // this.tempCreateSiteId = String(new Date().getTime());
-  //   const note: any = {
-  //   latitudeLongitude: coordsList
-  //   };
-  //   // const watchOnPolygonChanges: Subject<any> = new Subject<any>();
-  //   // this.watchOnPolygonChanges = new Subject<any>();
-  //   if (isFirstTime) {
-  //   this.updatePolygonOnChanges(this.watchOnPolygonChanges);
-  //   setTimeout(() => {
-  //     this.showOrCloseLocationOnMap(note, this.watchOnPolygonChanges);
-  //   }, 500);
-  //   } else {
-  //   this.moveMarkerToLocationForCovidPage(latValue, lngValue, true);
-  //   }
-
-  //   this.markerTail.nativeElement.style.display = 'block';
-  //   console.log(this.markerTail.nativeElement);
-  //   this.markerTailLayer.setPosition([lngValue, latValue]);
-  //   this.markerTailLayer.setElement(this.markerTail.nativeElement);
-  //   this.baseMapService.getCurrentBasemap().addOverlay(this.markerTailLayer);
-  //   // this.watchOnMarkerClick();
-
-  //   // this.showAddSiteWindow = true;
-  // }
-
   markCurrentLocation(): void {
     if (navigator.geolocation) {
       console.log('changed- navigated true ');
@@ -671,15 +544,6 @@ export class GeobarComponent
           console.log('changed- user location ');
           const latitude = positionData.coords.latitude;
           const longitude = positionData.coords.longitude;
-          // this.baseMapService.userLocation();
-          // this.baseMapService.getCurrentBasemap().getView().setZoom(17);
-
-          // ENABLE THIS ON CLICK MAP => MOVE MARKER
-          // // this.closePreviousMarkers();
-          // setTimeout(() => {
-          //   this.moveMarkerToLocationForCovidPage(latitude, longitude, true);
-          // }, 500);
-
           this.closePreviousMarkers();
           setTimeout(() => {
             this.moveMarkerToLocationForCovidPage(latitude, longitude);
@@ -706,24 +570,10 @@ export class GeobarComponent
       console.log('Browser is so old');
     }
   }
-
-  // newgeosolevent(e){
-  //   console.log('checking event binded value',e);
-  // }
-
-  // newwvwnt(eb){
-  //   console.log('checkhshsdhjnjs',eb);
-
-  // }
-  // newgeosolevent(globalInputValue): void{
-  //  // this.showAsModal = true;
-  //   //this.showFeSplashScreen = true;
-  //   console.log('kkkkkkkkkkkk.....',globalInputValue);
-  // }
-
   onSearch($event, inputValue): any {
     this.globalInputValue = this.searchValue;
     this.arrayObj = [];
+    this.showFrameworkForm = false;
     if (this.isGuest) {
       // SAVING OPERATION TO PERFORM AFTER LOGIN
       const index = this.afterLoginOperations.findIndex(
@@ -740,13 +590,13 @@ export class GeobarComponent
     } else {
       console.log('event triggied....', event, inputValue);
       this.activeSearchOptionLLC = false;
-
+      ///Angular Validations and transformation//
       if (this.frameworkForm.get('framework').value === 'Angular') {
         console.log('i am in angular');
         this._closeAlertMessage(this.alertComponent);
         this._validateInputText(inputValue);
-
         if (this.validatedsearch == true) {
+          console.log('checkvalidatedsearchistruee');
           if (this.onSearchCoordinates) {
             console.log(
               this.onSearchCoordinates,
@@ -808,48 +658,37 @@ export class GeobarComponent
             );
           }
         }
+        //Rectangular Validations and Transformations
       } else if (this.frameworkForm.get('framework').value === 'Rectangular') {
         console.log('i am in rectangular');
         this._validateRectInput(inputValue);
-
-        if (this.validatedsearch == true) {
-      
-          // for (let i = 0; i < 2; i++) {
-          //   this.arrayObj.push(Number(this.globalRectValue.split(',')[i]));
-          // }
-
-          // console.log(this.arrayObj[0], this.arrayObj[1], 'check selects');
-          var source_projection = this.baseMapService.getSourceProjection(
-            this.rectangularProjection
+        var source_projection = this.baseMapService.getSourceProjection(
+          this.rectangularProjection
+        );
+        console.log(source_projection, 'check source projection');
+        console.log(
+          this.baseMapService.getCurrentBasemap().getView().getProjection(),
+          'check destination projection'
+        );
+        var transformed_Coordinates =
+          this.baseMapService.getTransformedCoordinates(
+            [this.globalRectValue[0], this.globalRectValue[1]],
+            source_projection,
+            this.baseMapService.getCurrentBasemap().getView().getProjection()
           );
-          console.log(source_projection, 'check source projection');
-          console.log(
-            this.baseMapService.getCurrentBasemap().getView().getProjection(),
-            'check destination projection'
-          );
-          var transformed_Coordinates =
-            this.baseMapService.getTransformedCoordinates(
-              [this.globalRectValue[0], this.globalRectValue[1]],
-              source_projection,
-              this.baseMapService.getCurrentBasemap().getView().getProjection()
-            );
-          console.log(transformed_Coordinates, 'check output coordinates');
-          this.geobarService.addMarkerRect(
-            transformed_Coordinates[0],
-            transformed_Coordinates[1]
-          );
-        }
+        console.log(transformed_Coordinates, 'check output coordinates');
+        this.geobarService.addMarkerRect(
+          transformed_Coordinates[0],
+          transformed_Coordinates[1]
+        );
       }
     }
-
   }
-
   getOnSearchCoordinates(coordinates) {
     this.onSearchCoordinates.splice(0, this.onSearchCoordinates.length);
     this.onSearchCoordinates = coordinates;
-    // this.validatedsearch=true;
+    this.validatedsearch = true;
   }
-
   showGeobarOperations(): void {
     if (this.isGuest) {
       // SAVING OPERATION TO PERFORM AFTER LOGIN
@@ -873,16 +712,11 @@ export class GeobarComponent
     this.showLatLongCombinations = false;
     this.showGeobaseArea = false;
   }
-
   closeFilePickerOptions(): any {
-    // this.showFilePickerOptions = false;
-    // this.showAwsFilePicker = false;
     if (this.showCfmWindow) {
-      // this.minimizeCloudFileManager();
       this.closeCfmWindow();
     }
     if (this.showUcrWindow) {
-      // this.minimizeUcr();
       this.closeUcr();
     }
     this.resetCfmFileSelection = String(new Date().getTime());
@@ -957,13 +791,6 @@ export class GeobarComponent
         }
       }
     );
-    /* setTimeout(() => {
-      this.geoSessionsList = [];
-      for (let i = 0; i <= 20; i++){
-        this.geoSessionsList.push({ name: `Geo session ${i}`, id: new Date().getTime() + i });
-      }
-      this.geoSessionDataColleced = true;
-    }, 2000); */
   }
 
   // EXCEL=============================
@@ -1218,21 +1045,22 @@ export class GeobarComponent
     // Condition - 1 : if no input calling local directory
     if (!this.commonService.isValid(inputValue)) {
       this.faClass = '';
-      this.validatedsearch = false;
       this._getAlertMessage(
         this.alertComponent,
         'Try typing a location name or coordinates.'
       );
       console.log('checkglobalrectvalue');
-
     } else {
-      const RectcoordinatesRegexInd = /^\d{1,2},\d{2},\d{3}\.\d{4} \d{1,2},\d{2},\d{3}\.\d{4}$/;
+      const RectcoordinatesRegexInd =
+        /^\d{1,2},\d{2},\d{3}\.\d{4} \d{1,2},\d{2},\d{3}\.\d{4}$/;
 
-      const RectcoordinatesRegexInt = /^(\d{1,3}(?:,\d{3})*)\.\d{4} (\d{1,3}(?:,\d{3})*)\.\d{4}$/;
+      const RectcoordinatesRegexInt =
+        /^(\d{1,3}(?:,\d{3})*)\.\d{4} (\d{1,3}(?:,\d{3})*)\.\d{4}$/;
 
       const RectcoordinatesRegexSpace = /^\d{1,9}\.\d{1,4} \d{1,9}\.\d{1,4}$/;
 
-      const RectcoordinatesRegexcommaspace = /^\d{1,9}\.\d{1,4}, \d{1,9}\.\d{1,4}$/;
+      const RectcoordinatesRegexcommaspace =
+        /^\d{1,9}\.\d{1,4}, \d{1,9}\.\d{1,4}$/;
 
       const RectCoordinatesRegexComma = /^\d{1,9}\.\d{1,4},\d{1,9}\.\d{1,4}$/;
 
@@ -1249,29 +1077,53 @@ export class GeobarComponent
         RectcoordinatesRegexSpace
       );
       const ReturnRectcoordinatesRegexcommaspace = this._validateRectSearch(
-          inputValue,
-          RectcoordinatesRegexcommaspace
-        );
+        inputValue,
+        RectcoordinatesRegexcommaspace
+      );
       const ReturnRectcoordinatesRegexcomma = this._validateRectSearch(
         inputValue,
         RectCoordinatesRegexComma
       );
 
       if (ReturnRectcoordinatesRegexInd) {
-        this.globalRectValue = inputValue.split(' ').map(val => val.replace(/,/g, ''));
-        console.log(ReturnRectcoordinatesRegexcomma,this.globalRectValue,'checkglobalrectvalue1');
+        this.globalRectValue = inputValue
+          .split(' ')
+          .map((val) => val.replace(/,/g, ''));
+        console.log(
+          ReturnRectcoordinatesRegexcomma,
+          this.globalRectValue,
+          'checkglobalrectvalue1'
+        );
       } else if (ReturnRectcoordinatesRegexInt) {
-        this.globalRectValue = inputValue.split(' ').map(val => val.replace(/,/g, ''));
-        console.log(ReturnRectcoordinatesRegexcomma,this.globalRectValue,'checkglobalrectvalue2');
+        this.globalRectValue = inputValue
+          .split(' ')
+          .map((val) => val.replace(/,/g, ''));
+        console.log(
+          ReturnRectcoordinatesRegexcomma,
+          this.globalRectValue,
+          'checkglobalrectvalue2'
+        );
       } else if (ReturnRectcoordinatesRegexSpace) {
         this.globalRectValue = inputValue.split(' ');
-        console.log(ReturnRectcoordinatesRegexcomma,this.globalRectValue,'checkglobalrectvalue3');
+        console.log(
+          ReturnRectcoordinatesRegexcomma,
+          this.globalRectValue,
+          'checkglobalrectvalue3'
+        );
       } else if (ReturnRectcoordinatesRegexcommaspace) {
-        this.globalRectValue = inputValue.split(',').map(val => val.trim());
-        console.log(ReturnRectcoordinatesRegexcommaspace,this.globalRectValue,'checkglobalrectvalue4');
+        this.globalRectValue = inputValue.split(',').map((val) => val.trim());
+        console.log(
+          ReturnRectcoordinatesRegexcommaspace,
+          this.globalRectValue,
+          'checkglobalrectvalue4'
+        );
       } else if (ReturnRectcoordinatesRegexcomma) {
         this.globalRectValue = inputValue.split(',');
-        console.log(ReturnRectcoordinatesRegexcomma,this.globalRectValue,'checkglobalrectvalue5');
+        console.log(
+          ReturnRectcoordinatesRegexcomma,
+          this.globalRectValue,
+          'checkglobalrectvalue5'
+        );
       } else {
         console.log('Search input text not valid');
 
@@ -1302,27 +1154,11 @@ export class GeobarComponent
     // Condition - 1 : if no input calling local directory
     if (!this.commonService.isValid(inputValue)) {
       this.faClass = '';
-      this.validatedsearch = false;
       this._getAlertMessage(
         this.alertComponent,
         'Try typing a location name or coordinates.'
       );
-    }
-
-    // else if (this.currentSystemname != 'Angular') {
-    //   console.log(this.currentCoordinateSystem, 'angular epsg 4326');
-    //   const eventOptions = {
-    //     inputValue,
-    //     geobar: this,
-    //     isDMS: false,
-    //     isReverseLatlng: false,
-    //   };
-
-    //   this.geobarService.activateEvent(eventOptions, 'SearchLocation');
-    //   this.geobarValidationStatus = this.validStates.VALID;
-    //   this.validatedsearch = true;
-    //}
-    else {
+    } else {
       // Condition - 2 : if input coordinates validate it and add markers
       // const coordinatesRegex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/g;
       const coordinatesRegexOld =
@@ -1366,13 +1202,11 @@ export class GeobarComponent
           inputValue,
           coordinatesRegexReverseWithOutComma
         );
-      // this.validatedsearch = true;
 
       if (latLongMatchReturnResults) {
         console.log('VALID LAT LONGS FOUND', latLongMatchReturnResults);
         this.activeSearchOptionLLC = true;
         this.faClass = 'activeLLC';
-        // this.geobarService.addMarker(inputValue.split(',')[0], inputValue.split(',')[1]);
         const eventOptions = {
           inputValue,
           geobar: this,
@@ -1395,7 +1229,6 @@ export class GeobarComponent
         console.log('VALID DMS lat lng FOUND', DMSMatchReturnResults);
         this.activeSearchOptionLLC = true;
         this.faClass = 'activeLLC';
-        // this.geobarService.addMarker(inputValue.split(',')[0], inputValue.split(',')[1]);
         const eventOptions = {
           inputValue,
           geobar: this,
@@ -1408,7 +1241,6 @@ export class GeobarComponent
         console.log('VALID LONG LAT Reverse FOUND', longLatMatchReturnResults);
         this.activeSearchOptionLLC = true;
         this.faClass = 'activeLLC';
-        // this.geobarService.addMarker(inputValue.split(',')[0], inputValue.split(',')[1]);
         const eventOptions = {
           inputValue,
           geobar: this,
@@ -1424,7 +1256,6 @@ export class GeobarComponent
         );
         this.activeSearchOptionLLC = true;
         this.faClass = 'activeLLC';
-        // this.geobarService.addMarker(inputValue.split(',')[0], inputValue.split(',')[1]);
         const eventOptions = {
           inputValue,
           geobar: this,
@@ -1440,7 +1271,6 @@ export class GeobarComponent
         );
         this.activeSearchOptionLLC = true;
         this.faClass = 'activeLLC';
-        // this.geobarService.addMarker(inputValue.split(',')[0], inputValue.split(',')[1]);
         const eventOptions = {
           inputValue,
           geobar: this,
@@ -1473,9 +1303,6 @@ export class GeobarComponent
     inputValue = inputValue; // .replace(/\s/g, '');
     let returnResults = false;
     let regexVariable;
-    // const regexVariable = null;
-    // while ((regexVariable === regex.exec(inputValue)) !== null) {
-    // tslint:disable-next-line:no-conditional-assignment
     while ((regexVariable = regex.exec(inputValue)) !== null) {
       // This is necessary to avoid infinite loops with zero-width matches
       if (regexVariable.index === regex.lastIndex) {
@@ -1642,108 +1469,18 @@ export class GeobarComponent
     });
   }
   closeLayerUploadStatus(): any {
-    // this.renderer.listen(this.layerStatus.nativeElement, 'animationend', (e) => {
-    //   console.log('ANIMATION ENDED');
-    //   console.log(e);
     this.hideLayerUploadStatus();
-    // }).bind(this);
-    // this.layerStatus.nativeElement.style['box-shadow'] = '0px 0px 15px 5px green';
-    // this.layerStatus.nativeElement.style.animationName = 'animMoveLeft';
-    // this.layerStatus.nativeElement.style.animationDelay = '2s';
-    // this.layerStatus.nativeElement.style.animationDuration = '.5s';
-    // this.layerStatus.nativeElement.style.animationIterationCount = '1';
-    // this.layerStatus.nativeElement.style.animationTimingFunction = 'ease-in';
   }
 
   closeCfmWindow(): any {
     this.showCfmWindow = false;
     this.minimizedWindow = false;
   }
-  // minimizeCloudFileManager(): any {
-  //   // console.log('IN minimizeCloudFileManager');
-  //   // this.renderer.listen(this.cfmWindow.nativeElement, 'animationend', (e) => {
-  //   //   // console.log('ANIMATION ENDED');
-  //   //   // console.log(e);
-  //     this.minimizedWindow = true;
-  //   //   const clsList1 = this.cfmWindow.nativeElement.classList;
-  //   //   if (clsList1.contains('geoCfmWinSlideLeft')){
-  //   //     clsList1.remove('geoCfmWinSlideLeft');
-  //   //   }
-  //   // }).bind(this);
-  //   // const clsList = this.cfmWindow.nativeElement.classList;
-  //   // if (!clsList.contains('geoCfmWinSlideLeft')){
-  //   //   console.log('not contains slideLeft');
-  //   //   clsList.add('geoCfmWinSlideLeft');
-  //   // } else {
-  //   //   console.log('Already contains geoCfmWinSlideLeft');
-  //   // }
-  // }
-  // maximizeCloudFileManager(): any {
-  //   console.log('IN maximizeCloudFileManager');
-  //   this.minimizedWindow = false;
-
-  //   // this.renderer.listen(this.cfmWindow.nativeElement, 'animationend', (e) => {
-  //   //   // console.log('ANIMATION ENDED');
-  //   //   // console.log(e);
-  //   //   this.minimizedWindow = false;
-  //   //   const clsList1 = this.cfmWindow.nativeElement.classList;
-  //   //   if (clsList1.contains('geoCfmWinSlideRight')){
-  //   //     clsList1.remove('geoCfmWinSlideRight');
-  //   //   }
-  //   // }).bind(this);
-  //   // const clsList = this.cfmWindow.nativeElement.classList;
-  //   // if (!clsList.contains('geoCfmWinSlideRight')){
-  //   //   console.log('not contains slideRight');
-  //   //   clsList.add('geoCfmWinSlideRight');
-  //   // } else {
-  //   //   console.log('Already contains geoCfmWinSlideRight');
-  //   // }
-  // }
 
   closeUcr(): any {
     this.showUcrWindow = false;
     this.minimizedUcrWindow = false;
   }
-  // minimizeUcr(): any {
-  //   // console.log('IN minimizeUcr');
-  //   // this.renderer.listen(this.ucrWindow.nativeElement, 'animationend', (e) => {
-  //   //   // console.log('ANIMATION ENDED');
-  //   //   // console.log(e);
-  //     this.minimizedUcrWindow = true;
-  //   //   const clsList1 = this.ucrWindow.nativeElement.classList;
-  //   //   if (clsList1.contains('geoCfmWinSlideLeft')){
-  //   //     clsList1.remove('geoCfmWinSlideLeft');
-  //   //   }
-  //   // }).bind(this);
-  //   // const clsList = this.ucrWindow.nativeElement.classList;
-  //   // if (!clsList.contains('geoCfmWinSlideLeft')){
-  //   //   console.log('not contains slideLeft');
-  //   //   clsList.add('geoCfmWinSlideLeft');
-  //   // } else {
-  //   //   console.log('Already contains geoCfmWinSlideLeft');
-  //   // }
-  // }
-  // maximizeUcr(): any {
-  //   console.log('IN maximizeUcr');
-  //   this.minimizedUcrWindow = false;
-
-  //   // this.renderer.listen(this.ucrWindow.nativeElement, 'animationend', (e) => {
-  //   //   // console.log('ANIMATION ENDED');
-  //   //   // console.log(e);
-  //   //   this.minimizedUcrWindow = false;
-  //   //   const clsList1 = this.ucrWindow.nativeElement.classList;
-  //   //   if (clsList1.contains('geoCfmWinSlideRight')){
-  //   //     clsList1.remove('geoCfmWinSlideRight');
-  //   //   }
-  //   // }).bind(this);
-  //   // const clsList = this.ucrWindow.nativeElement.classList;
-  //   // if (!clsList.contains('geoCfmWinSlideRight')){
-  //   //   console.log('not contains slideRight');
-  //   //   clsList.add('geoCfmWinSlideRight');
-  //   // } else {
-  //   //   console.log('Already contains geoCfmWinSlideRight');
-  //   // }
-  // }
 
   getGeobaseListByFilter(selectedFilter): any {
     if (!this.isGuest) {
@@ -1800,11 +1537,8 @@ export class GeobarComponent
   showGeoSession(session): any {
     console.log('session is session', session);
     if (session.type === 'shareWithMe') {
-      // this.router.navigate(['/session/' + session.id + '/uuid/' + session.uuid]);
-      // window. open('/session/' + session.id + '/share/' + session.uuid, '_blank');
       window.open('/share/' + session.id, '_blank');
     } else {
-      // this.router.navigate(['/session/' + session.id]);
       window.open('/session/' + session.id, '_blank');
     }
   }
@@ -1848,7 +1582,6 @@ export class GeobarComponent
     if (!errorsFound) {
       let siteTags: any = [];
       if (this.commonService.isValid(this.tagsCtrl.value)) {
-        // siteTags = String(this.tagsCtrl.value).split(' ');
         siteTags = String(this.tagsCtrl.value).split(';');
       }
       const dataToSend = {
@@ -1918,19 +1651,12 @@ export class GeobarComponent
       );
     }
     this.baseMapService.getCurrentBasemap().removeOverlay(this.markerTailLayer);
-    // this.unListenMarkerClick();
     this.notePadService.clearPolygonDrawingTools();
     this.currSiteLocationData = [];
   }
   closeAddSite(): void {
     // ENABLE THIS ON CLICK MAP => MOVE MARKER
-
-    // // this.closePreviousMarkers();
-    // this.showAddSiteWindow = false;
-    // this.initializeMarkerToLocationForCovidPage(false);
-
     this.closePreviousMarkers();
-
     this.clearAllGeobarItems('');
     this.projects.forEach((element) => {
       element.selected = false;
@@ -1941,35 +1667,6 @@ export class GeobarComponent
     this.descCtrl.reset();
     this.tagsCtrl.reset();
   }
-  // unListenMarkerClick(): void{
-  //   console.log('unListenMarkerClick');
-  //   this.notePadService.clearPolygonDrawingTools();
-  //   unByKey(this.markerClickListener1);
-  //   this.markerClickListener1 = null;
-  //   this.baseMapService.getCurrentBasemap().removeEventListener('singleclick');
-  // }
-
-  // watchOnMarkerClick(): void{
-  //   this.markerClickListener1 = this.baseMapService.getCurrentBasemap().on('singleclick', (evt) => {
-  //     const feat = this.baseMapService.getCurrentBasemap().forEachFeatureAtPixel(evt.pixel, (feature, layer) => {
-  //       // you can add a condition on layer to restrict the listener
-  //       // console.log(feature);
-  //       // console.log(layer);
-  //       if (layer && layer.values_.name === `observationInstanceId_${this.tempCreateSiteId}`){
-  //         console.log(feature, layer);
-  //         return {feature, layer, pixel: evt};
-  //       }
-  //     });
-  //     console.log(feat);
-  //     if (feat) {
-  //       const data = feat.layer.values_;
-  //       console.log('CONTEXT INFO...');
-  //       console.log(data);
-  //       // this.showAddSiteScreen();
-  //     }
-  //   });
-  // }
-
   updatePolygonOnChanges(watchOnPolygonChanges: Subject<any>): void {
     this.watchOnPolygonChangesSubs = watchOnPolygonChanges.subscribe(
       (polygonChanged) => {
@@ -2027,11 +1724,6 @@ export class GeobarComponent
     console.log(note);
     let geometryData: any;
     const currentContextInfo: any = {};
-    // for (const key in this.currentContextInfo) {
-    //   if (Object.hasOwnProperty.call(this.currentContextInfo, key)) {
-    //     currentContextInfo[key] = this.currentContextInfo[key];
-    //   }
-    // }
     currentContextInfo.site = note;
     geometryData = {
       type: this.notePadService.shapeDrawType.POINT, // 'Point',
@@ -2047,7 +1739,7 @@ export class GeobarComponent
           {
             type: 'Feature',
             geometry: geometryData,
-            properties: { '': note.description }, // this.currentContextInfo
+            properties: { '': note.description },
           },
         ],
       },
@@ -2062,7 +1754,6 @@ export class GeobarComponent
       .forEach((layerObj) => {
         if (layerObj !== undefined) {
           if (layerObj.values_.name === data.name) {
-            // this.basemap.removeLayer(layerObj);
             layerFound = true;
             addedLayerObj = layerObj;
           }
@@ -2082,7 +1773,6 @@ export class GeobarComponent
         currentContextInfo
       );
     }
-    // console.log(data);
   }
 
   getProjectsList(): any {

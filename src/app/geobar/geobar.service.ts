@@ -8,7 +8,7 @@ import Point from 'ol/geom/Point.js';
 import OlTileLayer from 'ol/layer/Tile';
 import tiles from 'ol/source/TileWMS';
 import { SearchLocationEvent } from './events/searchLocation-event';
-import { RectSearchEvent } from './events/RectSearch-event';
+//import { RectSearchEvent } from './events/RectSearch-event';
 import { ServerURLEvent } from './events/serverURL-event';
 import { UploadEvent } from './events/upload-event';
 import { BasemapService } from '../basemap/basemap.service';
@@ -68,19 +68,19 @@ export class GeobarService {
     this._events[eventName].instance[event](options);
   }
 
-  activateRect(options){
-    this._events = this._getactivateRect();
-  }
+  // activateRect(options){
+  //   this._events = this._getactivateRect();
+  // }
 
-  private _getactivateRect() {
-    const basemap = this.basemapService.getCurrentBasemap();
-    return {
-      RectSearch: {
-        instance: new RectSearchEvent(this.ngProgress, this.authObsr),
-        event: 'RectcoordinatesSearchUtil'
-      }
-    };
-  }
+  // private _getactivateRect() {
+  //   const basemap = this.basemapService.getCurrentBasemap();
+  //   return {
+  //     RectSearch: {
+  //       instance: new RectSearchEvent(this.ngProgress, this.authObsr),
+  //       event: 'RectcoordinatesSearchUtil'
+  //     }
+  //   };
+  // }
 
   private _getMarkerRect(lng, lat) {
     const marker = new Feature({

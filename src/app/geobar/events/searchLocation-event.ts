@@ -246,7 +246,7 @@ export class SearchLocationEvent {
       lngVal = lngVal.toFixed(6);
     }
     console.log('after conversion the lat lng values are ', latVal, lngVal);
-    // options.geobar.geobarService.addMarker(latVal, lngVal);
+    //options.geobar.geobarService.addMarker(latVal, lngVal);
     const latlngsList = this.latlngCombinations(latVal, lngVal);
     options.geobar.loadDropDownContent(latlngsList);
     options.geobar.getOnSearchCoordinates([latVal,lngVal])

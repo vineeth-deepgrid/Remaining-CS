@@ -340,7 +340,7 @@ $secondry-selected-color: $secondry-selected-color;
               background-size: 18px 10px;
               background-repeat: no-repeat;
               background-position: center;
-            }
+              transform: rotate(180deg);            }
 
             .rectdropdown {
               position: absolute;
@@ -370,7 +370,7 @@ $secondry-selected-color: $secondry-selected-color;
 
             &.angulardropdownnotActive {
               background-image: url("../../assets/svgs/geosol/geosole-framework/drop-up-icon.svg");
-
+              transform: rotate(180deg); 
               background-size: 18px 10px;
               background-repeat: no-repeat;
               background-position: center;
