@@ -503,13 +503,6 @@
     <div *ngIf="showGeobaseArea" class="geobase-container">
       <div class="geo-base-header">
         <div class="geo-base-file-manage-container">
-<<<<<<< HEAD
-          <select placeholder="File Manager" (change) = "getGeobaseListByFilter($event.target.value)">
-            <option value="myFiles">My Sessions</option>
-            <option value="shareWithMe">Shared Sessions with Me</option>
-            <option value="shareByMe">My Shared Sessions</option>
-            <option *ngIf="userInfo.type=='INDEPENDENT'" disabled value="public">Public Sessions</option>
-=======
           <select
             placeholder="File Manager"
             (change)="getGeobaseListByFilter($event.target.value)"
@@ -524,46 +517,18 @@
             >
               Public Sessions
             </option>
->>>>>>> merged-code
           </select>
         </div>
         <div class="geo-base-sort-container">
           <select class="project" placeholder="Project">
-<<<<<<< HEAD
-            <option>Sort by Oldest</option><option>Sort by Latest</option>
-            <option>Sort A-Z</option><option>Sort Z-A</option>
-=======
             <option>Sort by Oldest</option>
             <option>Sort by Latest</option>
             <option>Sort A-Z</option>
             <option>Sort Z-A</option>
->>>>>>> merged-code
           </select>
         </div>
       </div>
       <div class="geo-base-body">
-<<<<<<< HEAD
-          <p class="data-fetching-status" *ngIf="!geoSessionDataColleced">Fetching data...</p>
-          <div *ngIf="geoSessionDataColleced" style="display: flex; flex-wrap: wrap;">
-            <p class="no-session-found" *ngIf="geoSessionsList.length<=0">No sessions found...</p>
-            <!-- <div class="geo-session-container" (click)="showGeoSession(session)" *ngFor="let session of geoSessionsList">
-              <span class="name">{{session.name}}</span>
-            </div> -->
-            <div class="geo-session-container" *ngFor="let session of geoSessionsList">
-              <!-- <div class="geo-session-div" (click)="showGeoSession(session)"> -->
-              <!-- <a class="geo-session-div" [routerLink]="'/session/'+session.id" target="_blank">
-                <span class="name">{{session.name}}</span>
-              </a> -->
-              <span class='geo-session-label' *ngIf="session.label==='New'">New</span>
-              <div class="geo-session-div" (click)="showGeoSession(session)"><span class="name">{{session.name}}</span></div>
-            </div>
-          </div>
-      </div>
-    </div>
-
-    <!-- COVID PAGE SUGGESTION TO ADD SITE -->
-    <div class="covid-lookup-msg-and-error-container" *ngIf="globalObject.pageType === 'COVID19'">
-=======
         <p class="data-fetching-status" *ngIf="!geoSessionDataColleced">
           Fetching data...
         </p>
@@ -601,204 +566,10 @@
       class="covid-lookup-msg-and-error-container"
       *ngIf="globalObject.pageType === 'COVID19'"
     >
->>>>>>> merged-code
       <div class="covid-lookup-msg-container">
         <!-- <p class="covid-lookup-msg">Look up an address above or move pin to change location</p> -->
         <!-- <p class="covid-lookup-msg">Look up an address above</p> -->
         <p class="covid-lookup-msg">My Location</p>
-<<<<<<< HEAD
-        <button class="my-location" matTooltip="Go to current location" matTooltipClass="mat-custom-tooltip"
-          [ngClass]="{'disabled': currentLocationFetchStatus === 'inprogress'}"
-          [disabled]="currentLocationFetchStatus === 'inprogress'"
-          (click)="markCurrentLocation()">
-          <span *ngIf="currentLocationFetchStatus !== 'inprogress'" class="material-icons"> my_location </span>
-          <span *ngIf="currentLocationFetchStatus === 'inprogress'" class="material-icons"> location_searching </span>
-        </button>
-      </div>
-      <div *ngIf="currentLocationFetchStatus === 'inprogress' || currentLocationFetchStatus === 'error'" class="covid-lookup-error-container">
-        <p class="error" *ngIf="currentLocationFetchStatus === 'error'">Not able find location</p>
-        <p class="find" *ngIf="currentLocationFetchStatus === 'inprogress'">Finding your current location...</p>
-      </div>
-    </div>
-
-    <!-- Geobar Dropdown -->
-  <div class="geosol-left-sub-options-container" >
-    <!-- <div class="bnb-item">Coordinate System : <span class="value"> {{currentCoordinateSystem}} </span></div> -->
-    <div class="bnb-item">Coordinate System : <span class="value">{{currentSystemname}} {{currentCoordinateSystem}}</span>
-      <img  (click)="openFrameworkForm()" style="transform:rotate(180deg);width: 18px; height: 10px; margin-top: -1px;" src="assets/svgs/geosol/geosole-framework/drop-up-icon.svg" /> 
-
-    </div>
-
-          <!-- <p>Coordinate System : <b>Angular EPSG 4326</b> -->
-        
-    <div class="geobar-left-sub-options-container"  *ngIf="showFrameworkForm">
-      <div class="frameworks-container">
-        <form [formGroup]="frameworkForm">
-            <div [ngClass]="{'framework-option': true, 'selected-option': frameworkForm.get('framework').value=='Rectangular'}">
-                <input bind-disabled="false" type="radio" id="Rectangular" formControlName="framework" name="framework" value="Rectangular">
-                <label for="Rectangular">
-                    <!-- Rectangular -->
-                    <div class="framework-option-data-container">
-                        <div class="framework-option-name">
-                            <p class="primary-name">Rectangular</p>
-                            <p class="secondary-name">(Easting & Northing)</p>
-                        </div>
-                        <div class="framework-option-select-container">
-                            <select [disabled]="frameworkForm.get('framework').value!='Rectangular'" #rectangularRef
-                                (change)="epsgChangeEvent(rectangularRef.value)" >
-                                <option value="EPSG:4326" selected>EPSG:4326</option>
-                                <option value="EPSG:2100">EPSG:2100</option>
-                                <option value="EPSG:3857">EPSG:3857</option> 
-                                <option value="EPSG:27700">EPSG:27700</option>
-                                <option value="EPSG:23032">EPSG:23032</option>
-                                <option value="EPSG:5479">EPSG:5479</option>
-                                <option value="EPSG:21781">EPSG:21781</option>
-                                <option value="EPSG:3413">EPSG:3413</option>
-                                <option value="EPSG:2163">EPSG:2163</option>
-                                <option value="EPSG:54009">ESRI:54009</option>
-                                <option value="EPSG:2229">EPSG:2229</option>
-                                
-                            </select>
-                        </div>
-                    </div>
-                </label>
-            </div>
-            <div [ngClass]="{'framework-option': true, 'selected-option': frameworkForm.get('framework').value=='Angular'}">
-                <input [disabled]="false" type="radio" id="Angular" formControlName="framework" name="framework" value="Angular">
-                <label for="Angular">
-                    <div class="framework-option-data-container">
-                        <div class="framework-option-name">
-                            <p class="primary-name">Angular</p>
-                            <p class="secondary-name">(Longitude & Latitude)</p>
-                        </div>
-                        <div class="framework-option-select-container">
-                            <!-- [disabled]="frameworkForm.get('framework').value!='angular'" -->
-                            <select [disabled]="frameworkForm.get('framework').value!='Angular'" #angularReference
-                                (change)="epsgChangeEvent(angularReference.value)" >
-                                <option value="EPSG:4326" selected>EPSG:4326</option>
-                                <option value="EPSG:3857">EPSG:3857</option> 
-                                <option value="EPSG:2100">EPSG:2100</option>
-                                <option value="EPSG:27700">EPSG:27700</option>
-                                <option value="EPSG:23032">EPSG:23032</option>
-                                <option value="EPSG:5479">EPSG:5479</option>
-                                <option value="EPSG:21781">EPSG:21781</option>
-                                <option value="EPSG:3413">EPSG:3413</option>
-                                <option value="EPSG:2163">EPSG:2163</option>
-                                <option value="EPSG:54009">ESRI:54009</option>
-                                <option value="EPSG:2229">EPSG:2229</option> 
-                                <!-- <option value="{{csSys.value}}" [selected]="csSys.value == selectedCoordinateSystem.value"
-                                    *ngFor="let csSys of coordinateSystemTypes">
-                                    {{csSys.name}}
-                                </option> -->
-                            </select>
-                        </div>
-                    </div>
-                    
-                </label>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-
-  </div>
-<!-- </div> -->
-
-<!-- WMS IMAGE PREVIEW -->
-<div #wmsimgEl *ngIf='activewmsImg' id="div-container-DPP" class="div-container-DPP">
-  <i class="close-icon" (click)="clearASB($event, inputValue.value);"></i>
-    <img class="wmsimg" [src]="_wmsimg" />
-</div>
-
-<!-- ALERT MSGS -->
-<app-geobar-alert></app-geobar-alert>
-<ng-template #geobarSearchContent>
-  <!-- Click to search or add local data -->
-  Go!
-</ng-template>
-<ng-template #geobarLLCContent>Latitude Longitude Combinations</ng-template>
-<ng-template #geobarASBContent>Add Services Button</ng-template>
-
-<!-- LAYER UPLOAD STATUS -->
-<!-- <div #layerStatus class="layer-upload-status-container" *ngIf="showLayerUploadStatus">
-  <p class="layer-upload-status">
-    <span *ngIf="layerUploadStatusInPercentage<100">Loading {{layerUploadStatusInPercentage}}%</span>
-    <span *ngIf="layerUploadStatusInPercentage>=100">Layer/Preview Loaded.</span>
-    <i *ngIf="layerUploadStatusInPercentage>=100" class="material-icons">check_outline</i>
-  </p>
-</div> -->
-
-
-<!-- CLOUD FILE MANAGER -->
-<div [ngStyle]="{ 'left': minimizedWindow ? '-300px' : '0px' }" 
-  class="cfm-data-container" *ngIf="showCfmWindow" #cfmWindow>
-  <div class="cfm-data-body">
-    <button class="cfm-data-close" matTooltip="Close" matTooltipClass="mat-custom-tooltip" (click)="closeCfmWindow()">
-      <i class="material-icons">close</i>
-    </button>
-    <app-cloud-file-selector
-      [reset]="resetCfmFileSelection"
-      (fileSelected) = "selectedAwsFile($event)"
-      (closeCfm) = "closeFilePickerOptions()"
-      >
-    </app-cloud-file-selector>
-  </div>
-</div>
-<!-- -=--=-=-=-=-=-=-_+__+__+_+_+_+_+_++++++++++++++++++++++++++++++++++++++++++++++__+++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-
-<!-- <div [ngStyle]="{ 'left': minimizedWindow ? '-300px' : '0px' }" 
-    class="cfm-data-container" *ngIf="showCfmWindow" #cfmWindow>
-    <div class="cfm-data-header">
-        <div class="cfm-data-title-container">
-          <span class="cfm-data-title">
-              File Manager (Cloud)
-          </span>
-          <img class="cfm-data-logo" src="assets/svgs/geobar/cloud_icon.svg">
-          <button class="cfm-data-minimize" *ngIf="!minimizedWindow" matTooltip="Minimize Cloud File Manager" matTooltipClass="mat-custom-tooltip" (click)="minimizeCloudFileManager()">
-              <span class="material-icons"> keyboard_arrow_left </span>
-          </button>
-          <button class="cfm-data-minimize" style="right: -35px; top: 5px;"
-              *ngIf="minimizedWindow" [ngStyle]="{'opacity': minimizedWindow ? '0.7' : '1'}"
-              matTooltip="Maximize Cloud File Manager" matTooltipClass="mat-custom-tooltip" (click)="maximizeCloudFileManager()">
-              <span class="material-icons"> keyboard_arrow_right </span>
-          </button>
-          <button class="cfm-data-close" matTooltip="Close" matTooltipClass="mat-custom-tooltip" (click)="closeCfmWindow()">
-              <i class="material-icons">close</i>
-          </button>
-        </div>
-    </div>
-    <div class="cfm-data-body">
-      <app-cloud-file-selector
-        [reset]="resetCfmFileSelection"
-        (fileSelected) = "selectedAwsFile($event)"
-        (closeCfm) = "closeFilePickerOptions()"
-        >
-      </app-cloud-file-selector>
-    </div>
-</div> -->
-
-
-<!-- External Source (UCR STAR) -->
-<div [ngStyle]="{ 'left': minimizedUcrWindow ? '-300px' : '0px' }" 
-    class="ucr-data-container" *ngIf="showUcrWindow" #ucrWindow>
-    <div class="ucr-inner-data-container">
-      <div class="cfm-data-header">
-          <div class="cfm-data-title-container">
-            <img class="cfm-data-logo" src="assets/svgs/geobar/external_source_icon.svg">
-            <span class="cfm-data-title" style="font-size: 14px;">
-              External Source (UCR STAR)
-            </span>
-            <!-- <button class="cfm-data-minimize" *ngIf="!minimizedUcrWindow" matTooltip="Minimize UCR STAR" matTooltipClass="mat-custom-tooltip" (click)="minimizeUcr()">
-                <span class="material-icons"> keyboard_arrow_left </span>
-            </button>
-            <button class="cfm-data-minimize" style="right: -35px; top: 40px;"
-                *ngIf="minimizedUcrWindow" [ngStyle]="{'opacity': minimizedUcrWindow ? '0.7' : '1'}"
-                matTooltip="Maximize UCR STAR" matTooltipClass="mat-custom-tooltip" (click)="maximizeUcr()">
-                <span class="material-icons"> keyboard_arrow_right </span>
-            </button> -->
-            <button class="cfm-data-close" matTooltip="Close" matTooltipClass="mat-custom-tooltip" (click)="closeUcr()">
-=======
         <button
           class="my-location"
           matTooltip="Go to current location"
@@ -911,166 +682,11 @@
                 <span class="material-icons"> keyboard_arrow_right </span>
             </button>
             <button class="cfm-data-close" matTooltip="Close" matTooltipClass="mat-custom-tooltip" (click)="closeCfmWindow()">
->>>>>>> merged-code
                 <i class="material-icons">close</i>
             </button>
           </div>
       </div>
       <div class="cfm-data-body">
-<<<<<<< HEAD
-        <p style="color: #fff;">Coming soon...</p>
-      </div>
-    </div>
-</div>
-
-<!--PDFMANAGER-->
-
-
-
-
-<div class="PDF-tool-modal-container" [hidden]="!showPDF">
-  <div class="PDF-tool-modal-area" >
-      <div class="PDF-tool-page-container">
-          <div class="PDF-tool-header-container">
-            
-              <div class="title">
-                 PDF Manager
-              </div>
-              <button class="close-btn" (click)="showPDF=false;">
-                  &#10006;
-              </button>
-          </div>
-
-          <div class="PDF-tool-body-container" >
-           
-            <div class="col-2 pdf-pages justify-content-center align-items-center" >
-              <div *ngFor="let data of PDFFinal2; let i = index" >
-                <div class="pdf-left">
-                  <img (click)="showPage($event)" id={{i}} class="pdf-img" src="{{data}}">
-                  <img  (click)="RemovePage($event)" id={{i}} class="cancel-btn" src="../../assets/svgs/geobar/cancel.svg">
-                </div>
-                <div>
-                  <p  class="page-num">Page{{i+1}}</p>
-          </div>
-            </div>
-         </div>
-            <div  class="col-10 " >
-              <div class="content" role="main" ></div>
-              <img class="pdf-img-preview" *ngFor="let data of PdfFinal3" src="{{PdfFinal3}}">
-            <div class="PDF-tool-footer-container">
-              <button class="download-btn" (click)="uploadpdf()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                  <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                </svg>
-            </button>
-      </div>
-          </div>
-          
-        </div>
-      
-  </div>
-</div>
-</div>
-
-
-<!-- 
-  COVID PAGE SPECIFIC CONTENT
- -->
-<!-- <span #markerTail style="display: none; position: absolute; top: -16px; left: 10px;
-  cursor: pointer; user-select: none;" (click)="showAddSiteScreen()">
-  <span class="material-icons" style="transform: rotate( -180deg ); color: #5b5b5b;
-    font-size: 30px; position: absolute; left: 0;">play_arrow </span>
-  <span style="padding: 5px; background: #5b5b5b; color: #fff; font-size: 12px;
-    position: absolute; left: 19px; white-space: nowrap; top: 2px;">Enter Details</span>
-</span> -->
-<span #markerTail class="marker-tail" (click)="showAddSiteScreen()">
-  <span class="material-icons arrow" >play_arrow </span>
-  <span class="text">Enter Details</span>
-</span>
-<div class="covid-add-site-container" *ngIf="globalObject.pageType === 'COVID19' &&
-                                              (showAddSiteWindow || showAddSiteSuccessMsg)">
-  <div class="covid-add-site-area">
-    <div class="covid-form-data-container" *ngIf="showAddSiteWindow">
-      <div class="project-and-topics-container">
-        <div class="project-type-container" *ngFor="let proj of projects">
-          <label>
-            <input type="checkbox" [(ngModel)]="proj.selected" (change)="onProjectChange($event, proj)"> {{proj.name}}
-          </label>
-        </div>
-        <div class="input-select-container">
-          <label for="siteTopic" class="select-title">Resources</label>
-          <select id="siteTopic" class="select" placeholder="Resources" [formControl]="topicSelect">
-              <option *ngFor="let topic of topics" value="{{topic.topicId}}">{{topic.name}}</option>
-          </select>
-        </div>
-      </div>
-      <p class="location-data">Entering details at ({{currSiteLocationDataToView}})</p>
-      <div class="site-info-container">
-        <div class="site-info-title-container">
-          Title:
-        </div>
-        <div class="site-info-value-continer">
-          <input type="text" [formControl]="titleCtrl" placeholder="Enter a short title">
-        </div>
-      </div>
-      <div class="site-info-container">
-        <div class="site-info-title-container">
-          Contact:
-        </div>
-        <div class="site-info-value-continer">
-          <input type="text" [formControl]="contactCtrl" placeholder="Enter name and phone or email">
-        </div>
-      </div>
-      <div class="site-info-container">
-        <div class="site-info-title-container">
-          Description:
-        </div>
-        <div class="site-info-value-continer">
-          <textarea [formControl]="descCtrl" placeholder="Enter a brief description of your need or availability"></textarea>
-        </div>
-      </div>
-      <div class="site-info-container">
-        <div class="site-info-title-container">
-          Tags:
-        </div>
-        <div class="site-info-value-continer">
-          <!-- <input type="text" [formControl]="tagsCtrl" placeholder="#tags to enable searching"> -->
-          <input style="font-size: smaller" type="text" [formControl]="tagsCtrl" placeholder="#tags to enable searching (use ; to enter multiple tags)">
-        </div>
-      </div>
-      <div class="err-msg-container" *ngIf="siteErrMsg !== ''">
-        <p>{{siteErrMsg}}</p>
-      </div>
-      <div class="add-site-close-container">
-        <p class="status" *ngIf="siteSavingStatus == 'inprogress'"> Saving site...</p>
-        <p class="status" style="color: #8a5454;" *ngIf="siteSavingStatus == 'error'"> Site saving failed.</p>
-        <div class="submit-btn-container" *ngIf="siteSavingStatus === '' || siteSavingStatus == 'error'">
-          <button (click)="createSite()">Submit</button>
-        </div>
-        <div class="cancel-btn-container"  *ngIf="siteSavingStatus === '' || siteSavingStatus == 'error'">
-          <button (click)="closeAddSite()">Cancel</button>
-        </div>
-        
-      </div>
-    </div>
-    <div class="covid-add-site-success-container" *ngIf="showAddSiteSuccessMsg">
-      <div class="add-site-success-msg-container">
-        <p class="header">Success!!!</p>
-        <p class="msg">Site added successfully...</p>
-      </div>
-      <div class="add-site-success-close-container">
-        <div class="submit-btn-container">
-          <button (click)="gotoGeopad()">View Added site</button>
-        </div>
-        <div class="cancel-btn-container">
-          <button (click)="showAddSiteSuccessMsg = false">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-=======
         <app-cloud-file-selector
           [reset]="resetCfmFileSelection"
           (fileSelected) = "selectedAwsFile($event)"
@@ -1345,4 +961,3 @@
       
   </app-geosol> -->
   </div>
->>>>>>> merged-code

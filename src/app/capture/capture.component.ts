@@ -22,7 +22,7 @@ import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { AnalyticsService } from '../Services/analytics.service';
 import {createEmpty, extend} from 'ol/extent';
-import {ChangeProjectonService} from '../Services/change-projecton.service';
+import {ChangeProjectionService} from '../Services/change-projecton.service';
 import {get as getProjection} from 'ol/proj'
 import { map } from 'rxjs/operators';
 
@@ -280,7 +280,7 @@ constructor(
   private commonService: CommonService, private renderer: Renderer2,
   private geotrayService: GeotrayService, private analytics: AnalyticsService,
   private geotowerService: GeotowerService, private layersService: LayersService,
-  private geobaseService: GeobaseService, private topicsService: TopicsService,private changeService:ChangeProjectonService) {
+  private geobaseService: GeobaseService, private topicsService: TopicsService,private changeService:ChangeProjectionService) {
   this.positionMarkObserver.subscribe(res => {
     console.log('POSITION MARKED');
     console.log(res);

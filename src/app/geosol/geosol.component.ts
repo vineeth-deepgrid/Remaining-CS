@@ -58,6 +58,7 @@ import { Polygon } from 'ol/geom';
 import { Vector } from 'ol/layer'
 import { boundingExtent } from 'ol/extent';
 import { SetLayerTOMapUtil } from '../geotower/util/setLayerToMapUtil.js';
+import { ChangeProjectionService } from '../Services/change-projecton.service.js';
 
 
 @Component({
@@ -180,7 +181,7 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
     private geotowerService: GeotowerService, private renderer: Renderer2,
     private commonService: CommonService, private formBuilder: FormBuilder,
     private observ: AuthObservableService, private printToolService: PrintToolService,
-    private authObsr: AuthObservableService, private myService: MyService,private changeService:ChangeProjectonService) {
+    private authObsr: AuthObservableService, private myService: MyService,private changeService:ChangeProjectionService) {
     config.backdrop = 'static';
     config.keyboard = false;
     this.opts = {

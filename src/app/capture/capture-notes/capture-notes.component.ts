@@ -15,7 +15,7 @@ import { FirebaseUtil } from '../../geobar/util/firebaseUtil';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { concatAll, take } from 'rxjs/operators';
 import { $ } from 'protractor';
-import { ChangeProjectonService } from 'src/app/Services/change-projecton.service.js';
+import { ChangeProjectionService } from 'src/app/Services/change-projecton.service.js';
 
 
 
@@ -341,7 +341,7 @@ projectionFromcs1:any;
 constructor(public commonService: CommonService, private firebaseService: FirebaseService,
       private basemapService: BasemapService,
       private firestorage: AngularFireStorage,
-      private notepadService: GeoNotePadService, private topicsService: TopicsService,private changeService:ChangeProjectonService) {
+      private notepadService: GeoNotePadService, private topicsService: TopicsService,private changeService:ChangeProjectionService) {
 this.imageUploadAbservableStream$.subscribe(data => this.uploadStatusEvent(data));
 this.progress.subscribe(prog => {
 console.log('IN PROGRESS');
