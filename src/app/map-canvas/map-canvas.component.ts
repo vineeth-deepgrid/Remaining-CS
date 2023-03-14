@@ -254,6 +254,7 @@ export class MapCanvasComponent implements OnInit, AfterViewInit {
     }, 1000);
     localStorage.removeItem('projCode')
     localStorage.removeItem('refresh')
+    localStorage.removeItem('all sites')
     
   }
 

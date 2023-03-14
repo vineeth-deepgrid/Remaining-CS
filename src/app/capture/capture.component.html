@@ -145,8 +145,8 @@
                       <div class="geo-notes-location-container">
                           <div [ngClass]="{'site-type-icon': true, 'site-point': note.siteType === siteType.POINT,
                             'site-polygon': note.siteType === siteType.POLYGON, 'site-line': note.siteType === siteType.LINE_STRING}"
-                            matTooltip="Click to go to the location of this site" matTooltipClass="mat-custom-tooltip"
-                            (click)="showOrCloseLocationOnMap(note);">
+                            matTooltip="Click to go to the location of this site" matTooltipClass="mat-custom-tooltip" (mousedown)="trackNotes(note)"
+                            (click)="showOrCloseSite('zoom');">
                           </div>
                           <p>{{note.locationName}}</p>
                           <div class="data-right" *ngIf="!note.isExpanded"> </div>

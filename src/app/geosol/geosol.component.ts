@@ -137,7 +137,7 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
     { name: 'ESRI:54009', value: '54009'},
     { name: 'EPSG:2229', value: '2229'},
   ];
-  selectedReferenceSystem: any = this.referenceSystemTypes[0];
+  selectedReferenceSystem: any = this.referenceSystemTypes[1];
   @Input() awarenessCurrentMode: any = {};
   @Input() globalObject: any = {};
   @Output() toggleAwareness: EventEmitter<any> = new EventEmitter<any>();

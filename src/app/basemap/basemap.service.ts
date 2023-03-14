@@ -228,7 +228,7 @@ export class BasemapService {
         center: [options.longitude, options.latitude],
         zoom: options.zoom,
         // #TODO: Need to remove this if this is not required.
-        projection: this.projection,
+        projection: this.projection3857Code,
         constrainRotation: false
       })
     });

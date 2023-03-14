@@ -71,6 +71,7 @@ export class GeoNotePadService {
   annotationOverlayId = 'annotateSaveOption';
   totalNotes: any[];
   selectedNoteId: any;
+  GlobalObject: any;
   storeCount = 0
   showCaptureNotes: any;
   checkCondition: any;
@@ -461,7 +462,7 @@ export class GeoNotePadService {
   }
   
 
-  reDrawPointOrPolygonOnMap(drawType, geoJson, zoomToLayer, watchOnPolygonChanges: Subject<any> = null,
+  reDrawPointOrPolygonOnMap(drawType, geoJson, zoomToLayer,
                             context, siteParams = null): void{
                               console.log(context,"check the context in redraw")
     console.log(geoJson, drawType,"jjjjj");
@@ -506,31 +507,30 @@ export class GeoNotePadService {
       console.log(this.basemap.getLayers(),geoJson,"CHECK ALL THE LAYERS")
 
   
-      if (this.commonService.isValid(watchOnPolygonChanges)) {
-        console.log('SUBSCRIBED FOR POLYGON CHANGES');
-        this.modify = new Modify({source: vectorSource});
-        this.basemap.addInteraction(this.modify);
-        try{
-          console.log(this.modify);
-          this.listener = this.modify.on('modifyend', (event) => {
-            const features = event.features.getArray();
-            const newForm = new GeoJSON();
-            const featColl = newForm.writeFeaturesObject(features);
-            const data = {
-              features: featColl,
-              'co-ordinates': featColl.features[0].geometry.coordinates,
-              name: geoJson.name,
-              from: drawType
-            };
-            watchOnPolygonChanges.next(data);
+      // if (this.commonService.isValid(watchOnPolygonChanges)) {
+      //   console.log('SUBSCRIBED FOR POLYGON CHANGES');
+      //   this.modify = new Modify({source: vectorSource});
+      //   this.basemap.addInteraction(this.modify);
+      //   try{
+      //     console.log(this.modify);
+      //     this.listener = this.modify.on('modifyend', (event) => {
+      //       const features = event.features.getArray();
+      //       const newForm = new GeoJSON();
+      //       const featColl = newForm.writeFeaturesObject(features);
+      //       const data = {
+      //         features: featColl,
+      //         'co-ordinates': featColl.features[0].geometry.coordinates,
+      //         name: geoJson.name,
+      //         from: drawType
+      //       };
             
-          });
+      //     });
           
-        }catch (e){
-          console.log(e);
-        }
+      //   }catch (e){
+      //     console.log(e);
+      //   }
         
-      }
+      // }
       if (zoomToLayer) {
         console.log(vectorLayer);
         console.log(vectorLayer.values_);
@@ -551,7 +551,6 @@ export class GeoNotePadService {
           this.basemap.values_.view.setCenter(extent);
           this.basemap.getView().setZoom(17);
         } else {
-          console.log(this.basemap.getView().fit(extent,this.basemap.getSize()),"check fit extent")
           this.basemap.getView().fit(extent,this.basemap.getSize());
           console.log(this.basemap.getView().getZoom(),"check the zoomm")
           console.log(this.basemap.getView().setZoom(this.basemap.getView().getZoom() - 1),"check getzoom")
@@ -561,8 +560,8 @@ export class GeoNotePadService {
     
   }
 
-reDrawPointOrPolygonOnMapForCapture(drawType, geoJson, zoomToLayer, watchOnPolygonChanges: Subject<any> = null,
-    context): void{
+reDrawPointOrPolygonOnMapForCapture(drawType, geoJson, zoomToLayer,
+    context,siteparams = null): void{
       console.log(context,"check the context in redraw")
 console.log(geoJson, drawType,"jjjjj");
 const shape = this.getShapeOfaContext(context);
@@ -574,7 +573,7 @@ featureProjection: this.basemapService.getBaseMapProjection()
 });
 const vectorLayer = new VectorLayer({
 source: vectorSource,
-style: this.getLayerStyle(shape)
+style: this.getLayerStyle(shape,siteparams)
 });
 vectorLayer.set('name', geoJson.name);
 vectorLayer.set('geopadCustomData', context);
@@ -603,31 +602,31 @@ console.log(vectorSource,"check vector sourcee")
 console.log(this.basemap.getLayers(),geoJson,"CHECK ALL THE LAYERS")
 
 
-if (this.commonService.isValid(watchOnPolygonChanges)) {
-console.log('SUBSCRIBED FOR POLYGON CHANGES');
-this.modify = new Modify({source: vectorSource});
-this.basemap.addInteraction(this.modify);
-try{
-console.log(this.modify);
-this.listener = this.modify.on('modifyend', (event) => {
-const features = event.features.getArray();
-const newForm = new GeoJSON();
-const featColl = newForm.writeFeaturesObject(features);
-const data = {
-features: featColl,
-'co-ordinates': featColl.features[0].geometry.coordinates,
-name: geoJson.name,
-from: drawType
-};
-watchOnPolygonChanges.next(data);
+// if (this.commonService.isValid(watchOnPolygonChanges)) {
+// console.log('SUBSCRIBED FOR POLYGON CHANGES');
+// this.modify = new Modify({source: vectorSource});
+// this.basemap.addInteraction(this.modify);
+// try{
+// console.log(this.modify);
+// this.listener = this.modify.on('modifyend', (event) => {
+// const features = event.features.getArray();
+// const newForm = new GeoJSON();
+// const featColl = newForm.writeFeaturesObject(features);
+// const data = {
+// features: featColl,
+// 'co-ordinates': featColl.features[0].geometry.coordinates,
+// name: geoJson.name,
+// from: drawType
+// };
+// watchOnPolygonChanges.next(data);
 
-});
+// });
 
-}catch (e){
-console.log(e);
-}
+// }catch (e){
+// console.log(e);
+// }
 
-}
+// }
 if (zoomToLayer) {
 console.log(vectorLayer);
 console.log(vectorLayer.values_);
@@ -690,10 +689,9 @@ getStoredFunction(){
   }
 
   removeLayerFromMap(mapObj: OlMap, layerName: string): void{
-    console.log("i am in remove layer")
+
     const addedLayerObj: VectorLayer = this.commonService.getLayerOfMap(mapObj, layerName);
     if (this.commonService.isValid(addedLayerObj)){
-      console.log(mapObj,layerName,"confirm the hit of remove layer")
       mapObj.removeLayer(addedLayerObj);
     }
 
@@ -989,5 +987,25 @@ getStoredFunction(){
   getSelectedNoteId(id){
     return this.selectedNoteId = id
   }
+
+  saveGlobalObject(gObject){
+      return this.GlobalObject = gObject
+    }
+  
+    getGlobalObject(){
+      return this.GlobalObject
+    }
+
+    // getAllSites(globalObject){
+    //   const bodyData = {
+    //     projectId: 0,
+    //     topicId: 0,
+    //     placeId: 0,
+    //     searchText: '',
+    //     siteType: 'ALL',
+    //     noOfDays: 0
+    // }
+    //   return this.http.post(${this.serverUrl2}/api/v2/geobases/${globalObject.geobase.sessionId}/geopads/${globalObject.geobase.geopadId}/sites/,bodyData)
+    // }
 
 }
