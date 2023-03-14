@@ -27,6 +27,8 @@ import { GeoNotePadService } from '../Services/geo-notepad.service';
 import { TopicsService } from '../Services/topics.service';
 import { CloudFileSelectorComponent } from '../cloud-file-selector/cloud-file-selector.component';
 import { Observable } from 'rxjs';
+import { FormBuilder } from '@angular/forms';
+import { MyService } from '../Services/geobar.service';
 const AWS: any = (window as any).AWS;
 @Component({
   selector: 'app-geotray',
@@ -111,7 +113,9 @@ amazonS3BucketName = 'test-gallery1';
     private analytics: AnalyticsService, private geobarService: GeobarService,
     private renderer: Renderer2, private router: Router, 
     private geoTowerService: GeotowerService, private geobaseService: GeobaseService, 
-    private notePadService: GeoNotePadService, private topicsService: TopicsService) {
+    private notePadService: GeoNotePadService, private topicsService: TopicsService,     private formBuilder: FormBuilder,
+    private observ: AuthObservableService,
+    private myService: MyService) {
       AWS.config.region = 'ap-southeast-1'; // Region
       AWS.config.credentials = new AWS.CognitoIdentityCredentials({
           IdentityPoolId: 'ap-southeast-1:cff13619-42b1-48c7-a470-459b66795b3c',
@@ -653,9 +657,9 @@ amazonS3BucketName = 'test-gallery1';
               alertComponent: 'this.alertComponent',
               zip_file: zip,
               fileEvent: 'event',
-              // geobar: new GeobarComponent(this.basemapService, this.renderer, this.router, this.authObsr, 
-              //   this.commonService, this.geobarService, this.geoTowerService, this.geobaseService, 
-              //   this.notePadService, this.topicsService)
+              geobar: new GeobarComponent(this.basemapService, this.renderer, this.router, this.authObsr, 
+                this.commonService, this.geobarService, this.geoTowerService, this.geobaseService, 
+                this.notePadService, this.topicsService, this.formBuilder, this.observ, this.myService )
             };
             this.geobarService.activateEvent(eventOptions, 'AwsUrl'); 
           });

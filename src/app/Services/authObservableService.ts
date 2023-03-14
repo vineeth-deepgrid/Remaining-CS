@@ -185,6 +185,22 @@ export class AuthObservableService {
     });
   }
 
+  subscribeToGetMapReferenceSystem(classId: string, callback: Function){
+    const event = 'reference-system';
+    this.subscribe(event, classId, callback);
+  }
+  unSubscribeToGetMapReferenceSystem(classId: string){
+    const event = 'reference-system';
+    this.unsubscribe(event, classId);
+  }
+  updateMapReferenceSystem(status){
+    this._data.next({
+      event: 'reference-system',
+      data: status,
+      result: 'ok'
+  });
+}  
+
   subscribeToGetViewFactory(classId: string, callback: Function) {
     const event = 'view-factory';
     this.subscribe(event, classId, callback);

@@ -692,7 +692,7 @@ export class PrototypeWindowComponent implements OnInit, OnChanges {
       name: 'auto-polygon',
       visible: false
     });
-    // this.basemap.addLayer(this.vectorLayer);
+    this.basemap.addLayer(this.vectorLayer);
     console.log('what is here polygone feature ', polygonFeature, this.basemap.getLayers());
     console.log('get extent ', polygonFeature.getGeometry().getExtent());
     const boxExtent = polygonFeature.getGeometry().getExtent();

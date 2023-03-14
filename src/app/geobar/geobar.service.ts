@@ -66,7 +66,7 @@ export class GeobarService {
     this._events[eventName].instance[event](options);
   }
 
-  /**These methods are for creating and adding marker to map */
+  /**These methods for creating and adding marker to map */
   private _getMarker(lat, lng) {
     const marker = new Feature({
       geometry: new Point([lng, lat])

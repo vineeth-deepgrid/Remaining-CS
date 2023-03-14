@@ -13,7 +13,7 @@ export class SearchLocationEvent {
     return str.split(',');
   }
   private strSplitBySpace(str): any {
-    return str.split(' ');  
+    return str.split(' ');
   }
   private remveEWNS_CharFromStr(dmsStrEWNS): any {
     dmsStrEWNS = dmsStrEWNS.replace('E', '').trim();
@@ -47,7 +47,7 @@ export class SearchLocationEvent {
       }
     } else if (dmsStr.length === 2) {
       degree = parseFloat(dmsStr[0]);
-      minites = parseFloat(dmsStr[1]);  
+      minites = parseFloat(dmsStr[1]);
       if(this.isLatLngPositiveOrNegative(degree)) {
         return degree + (minites / 60);
       } else {
@@ -136,7 +136,6 @@ export class SearchLocationEvent {
       if (options.isDMS) {        
         if(this.strSplitBySpace(latlngStr).length === 2) {
           const latlngArray = this.strSplitBySpace(latlngStr);
-          console.log(latlngArray,"check string.....")
           latValue = latlngArray[0];
           lngValue = latlngArray[1];
         } else {
@@ -176,14 +175,12 @@ export class SearchLocationEvent {
         // Here we did not have any commas between latlng or lnglat
         console.log('in no comma latlngs ', latlngStr, latlngStr.trim());
         const latlngStrArray = this.strSplitBySpace(latlngStr.trim());
-        console.log(latlngStrArray,'array length 2 or 6.....')
         latValue = latlngStrArray[0].trim();
         lngValue = latlngStrArray[1].trim();
         if(latlngStrArray.length === 2) {
           latValue = latlngStrArray[0].trim();
           lngValue = latlngStrArray[1].trim();
         } else if (latlngStrArray.length === 6) {
-
           /* latValue = latlngStrArray[0].trim();
           lngValue = latlngStrArray[3].trim(); */
           latValue = this.dmsToDecimal([latlngStrArray[0].trim(), latlngStrArray[1].trim(), latlngStrArray[2].trim()]).toString();
@@ -209,9 +206,9 @@ export class SearchLocationEvent {
     // let lngVal = latlngStr.split(',')[1];
     let latVal = latValue;
     let lngVal = lngValue;
-    if (-9000000000 <= latVal && latVal <= 9000000000) {
+    if (-90 <= latVal && latVal <= 90) {
       console.log('lat value isbetween -90 to 90');
-    } else if ((-18000000000 <= latVal && latVal <= 180000000000) && (-90000000000 <= lngVal && lngVal <= 90000000000)) {
+    } else if ((-180 <= latVal && latVal <= 180) && (-90 <= lngVal && lngVal <= 90)) {
       console.log('lat value isbetween -180 to 180 && lng value is between -90 to 90');
       latVal = lngValue;
       lngVal = latValue;
@@ -221,7 +218,7 @@ export class SearchLocationEvent {
       this.ngProgress.ref().complete();
       return;
     }
-    if (-180000000000 <= lngVal && lngVal <= 180000000000) {
+    if (-180 <= lngVal && lngVal <= 180) {
       console.log('long value isbetween -180 to 180');
     } else {
       console.log('lng value out of range');
@@ -249,7 +246,6 @@ export class SearchLocationEvent {
     options.geobar.geobarService.addMarker(latVal, lngVal);
     const latlngsList = this.latlngCombinations(latVal, lngVal);
     options.geobar.loadDropDownContent(latlngsList);
-    options.geobar.getOnSearchCoordinates([latVal,lngVal])
     // this.ngProgress.done();
     this.ngProgress.ref().complete();
   }
@@ -318,28 +314,28 @@ export class SearchLocationEvent {
   }
 
   private latRangeCondition(latVal): any {
-    if ((parseFloat('0') < parseFloat(latVal)) && (parseFloat(latVal) < parseFloat('90000000000'))) {
+    if ((parseFloat('0') < parseFloat(latVal)) && (parseFloat(latVal) < parseFloat('90'))) {
       return true;
     }
     return false;
   }
 
   private lngRangeCondition(lngVal): any {
-    if ((parseFloat('0') < parseFloat(lngVal)) && (parseFloat(lngVal) < parseFloat('180000000000'))) {
+    if ((parseFloat('0') < parseFloat(lngVal)) && (parseFloat(lngVal) < parseFloat('180'))) {
       return true;
     }
     return false;
   }
 
   private latNegativeRangeCondition(lngVal): any {
-    if ((parseFloat('-90000000000') < parseFloat(lngVal)) && (parseFloat(lngVal) < parseFloat('0'))) {
+    if ((parseFloat('-90') < parseFloat(lngVal)) && (parseFloat(lngVal) < parseFloat('0'))) {
       return true;
     }
     return false;
   }
 
   private lngNegativeRangeCondition(lngVal): any {
-    if ((parseFloat('-180000000000') < parseFloat(lngVal)) && (parseFloat(lngVal) < parseFloat('0'))) {
+    if ((parseFloat('-180') < parseFloat(lngVal)) && (parseFloat(lngVal) < parseFloat('0'))) {
       return true;
     }
     return false;

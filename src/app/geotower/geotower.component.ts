@@ -45,7 +45,7 @@ export class GeotowerComponent implements OnInit, OnChanges, AfterViewInit {
   towerOptionsWidth = 155;
   paddingForScrollSpace = 45;
   trailingSpace = 45;
-  layerOptionsHeight = 40;
+  layerOptionsHeight = 100;
   // isGuest = true;
   currentWorkspace: any = {};
   afterLoginOperations: any[] = [];
@@ -127,6 +127,7 @@ export class GeotowerComponent implements OnInit, OnChanges, AfterViewInit {
     console.log('IN currentSession CHANGES', changes.isGuest);
     console.log(changes);
     console.log(this);
+    
     // console.log('is guest ?? ', this.isGuest, this.isGeotowerActive, changes.isGuest.currentValue);
     // if (!this.isGeotowerActive) {
     //   this.activateGeotower();
@@ -207,6 +208,7 @@ export class GeotowerComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit(): any {
+    //this.activateGeotower();
     // this._getLayerListFromPostgis(null);
     this._setClientLayerToTower();
     // this.getGeobaseInfo();

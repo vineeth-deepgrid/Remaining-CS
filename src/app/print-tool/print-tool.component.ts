@@ -1570,4 +1570,3 @@ checkButtonFunction(e){
   this.checkUpload = true
 }
 }
-

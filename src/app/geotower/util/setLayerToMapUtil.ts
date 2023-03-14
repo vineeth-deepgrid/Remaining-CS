@@ -31,9 +31,11 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { Icon, Circle } from 'ol/style.js';
 import $ from 'jquery';
+import { GeosolComponent } from 'src/app/geosol/geosol.component';
+import { OnInit } from '@angular/core';
 
 
-export class SetLayerTOMapUtil {
+export class SetLayerTOMapUtil  {
   private basemapProjection;
   private basemap;
   private ZIP_EXTENSION_CONSTANT = '.zip';
@@ -69,8 +71,15 @@ export class SetLayerTOMapUtil {
 
   constructor(private basemapService: BasemapService, private commonService: CommonService) {
     this.basemap = this.basemapService.getCurrentBasemap();
-    this.basemapProjection = this.basemap.getView().getProjection().code_;
+    this.basemapProjection= GeosolComponent.mapReference;
+    console.log(this.basemapProjection, 'geosolcomponenet')
+    // this.setLayer.subscribeToGetMapReferenceSystem('component', (data)=>{
+    //   this.setLayerToMap(data)
+    //   console.log(this.basemapProjection, 'basemap is')
+    // });
+
   }
+
   public layerPreview(options): any {
     console.log('client obj is ', options);
     const filetype = options.layerObj.fileType;
@@ -128,6 +137,7 @@ export class SetLayerTOMapUtil {
         featureProjection: this.basemapProjection
       })
     });
+    console.log(this.basemapProjection, 'basemapin tower')
     const fill = new Fill({
       color: 'rgba(255, 255, 255, 1)'
     });
@@ -192,7 +202,7 @@ export class SetLayerTOMapUtil {
     });
     const vectorSource = new VectorSource({
       features: (new GeoJSON()).readFeatures(geoJson, {
-        featureProjection: this.basemapProjection
+        featureProjection:this.basemapProjection
       })
     });
     vectorSource.getFeatures().forEach(feature => {
@@ -520,7 +530,7 @@ export class SetLayerTOMapUtil {
         translationY = '0';
         rotateConditionOne = '0';
         rotateConditionTwo = '0';
-        this.epsgCode = this.basemapService.projection3857Code;
+        this.epsgCode = this.basemapProjection;
       }
 
 

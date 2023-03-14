@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter,
-        SimpleChange, HostListener, OnChanges } from '@angular/core';
+        SimpleChange, HostListener, OnChanges, AfterViewInit } from '@angular/core';
 import { ConfigServices } from 'src/app/config.service';
 import { GeotowerService } from '../geotower.service';
 import { ConfigDataKeys } from '../../config.enum';
@@ -16,6 +16,7 @@ import { GeobaseService } from 'src/app/Services/geobase.service';
 import ZoomToExtent from 'ol/control/ZoomToExtent';
 import { getCenter } from 'ol/extent';
 import { findIndex } from 'rxjs-compat/operator/findIndex';
+import { TowerItemOptionsComponent } from '../tower-item-options/tower-item-options.component';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class TowerItemComponent implements OnInit, OnChanges {
   // layersList: any[] = [];
   @Input() refresh = '';
   @Output() towerReloaded: EventEmitter<any> = new EventEmitter<any>();
+  @Output() showPanToLayer: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() layersCount: EventEmitter<number> = new EventEmitter<number>();
   @Input() isGroup: boolean;
   @Output() isAnyLayerOptionsActive: EventEmitter<boolean> = new EventEmitter();
@@ -69,6 +71,14 @@ export class TowerItemComponent implements OnInit, OnChanges {
   selectedLayerForPreview = '';
   @Input() isGeotowerActive;
   @Input() geoRefLayerDataToShow: any = {};
+  searchorhand=true;
+  showlayerordeletelayer=true;
+  tableordatabase=true;
+  selectionorlabel=true;
+  zoomorpan=true;
+  showpreview: boolean;
+  finallayername: any;
+  
 
   constructor(private configService: ConfigServices, private commonService: CommonService,
               private geotowerService: GeotowerService, private route: ActivatedRoute,
@@ -76,6 +86,7 @@ export class TowerItemComponent implements OnInit, OnChanges {
               private geobaseService: GeobaseService) { }
 
   ngOnChanges(change: { [key: string]: SimpleChange }): any {
+    
     // this.isDeleteDisable = change.isDeleteDisable.currentValue;
     console.log(' is guest ', this.isGuest, change, this.isDeleteDisable);
     if (this.commonService.isValid(change.refresh)) {
@@ -92,6 +103,7 @@ export class TowerItemComponent implements OnInit, OnChanges {
           this.basemap.getCurrentBasemap().getLayers().forEach(layerObj => {
             if (layerObj !== undefined) {
               const index = this.layersList.findIndex(layer => layer.name === layerObj.values_.name);
+              this.finallayername=this.layer.name.toUpperCase( ) 
               if (index !== -1) {
                 this.basemap.getCurrentBasemap().removeLayer(layerObj);
               }
@@ -131,8 +143,9 @@ export class TowerItemComponent implements OnInit, OnChanges {
       this.layer = this.layersList[this.layerIndex];
     }
     console.log(this.layer);
+   
   }
-
+ 
   @HostListener('window:keyup.esc', ['$event'])
     keyEvent(event: KeyboardEvent): any {
     console.log('esc clicked!! geotower item component ', event);
@@ -556,6 +569,7 @@ export class TowerItemComponent implements OnInit, OnChanges {
   }
 
   showPreviewFun(layer): void{
+    this.showpreview=!this.showpreview
     console.log(layer);
     // if (layer.fileType === '.jpg'){
     //   if (this.commonService.isValid(layer.metadata.geodata)){
@@ -585,5 +599,38 @@ export class TowerItemComponent implements OnInit, OnChanges {
     else{
       return false;
     }
+  }
+  previewORgrouplayer() {
+    console.log('Long press triggered');
+    this.searchorhand=!this.searchorhand;
+  }
+  showlayerORdeletelayer(){
+    this.showlayerordeletelayer=!this.showlayerordeletelayer;
+  }
+  tableORdatabase(){
+    this.tableordatabase=!this.tableordatabase;
+  }
+  selectionORlabel(){
+    this.selectionorlabel=!this.selectionorlabel;
+  }
+  zoomORpan(){
+    this.zoomorpan=!this.zoomorpan;
+  }
+  pantolayer(){
+    console.log("i am pan")
+    this.showPanToLayer.emit(true);
+    TowerItemOptionsComponent.panToLayer(this.basemap,this.layer)
+  }
+  deletelayer(){
+    console.log(this.layer.layerId,"i am delete")
+    TowerItemOptionsComponent.deleteLayer(this.layer,this.towerId,this.layersService,this.geotowerService,this.basemap)
+    
+  }
+  savelayer(event){
+    TowerItemOptionsComponent.saveLayer(this.layer,this.basemap)
+    this.saveTowerLayerFun(TowerItemOptionsComponent.options)
+  }
+  tables(){
+    TowerItemOptionsComponent.showDBFData(this.layer,this.basemap)
   }
 }

@@ -12,13 +12,19 @@ export class DbfTableComponent implements OnInit {
   private _popupOverlay: Overlay;
   tableData = [];
   tableColumns = [];
+  static _popupOverlay: any;
+  static _containerEl: any;
+  static _closerEl: any;
+  static close: any;
+  static tableColumns: any;
+  static tableData: any[];
 
 
   constructor() { }
 
   ngOnInit() { }
 
-  getdbfTablePopup() {
+  static getdbfTablePopup() {
     this._popupOverlay = new Overlay({
       element: this._containerEl.nativeElement,
       autoPan: true,
@@ -38,7 +44,7 @@ export class DbfTableComponent implements OnInit {
     return false;
   }
 
-  setPropertyValues(tableData, tableColumns) {
+  static setPropertyValues(tableData, tableColumns) {
     this.tableColumns = tableColumns;
     this.tableData = [];
     Object.entries(tableData).forEach(entry => {

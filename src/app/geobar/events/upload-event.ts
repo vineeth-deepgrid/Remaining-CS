@@ -57,6 +57,7 @@ export class UploadEvent {
   private _basemapProjection;
   private _commonService: CommonService;
   private epsgCode = 'NO-EPSG';
+  // private epsgCode : any;
 
   progress: Subject<any> = new Subject<any>();
   uploadOptions: any;
@@ -189,7 +190,7 @@ export class UploadEvent {
         || returnData.filetype === this.CSV_EXTENSION_CONSTANT
         || returnData.filetype === this.PDF_EXTENSION_CONSTANT) {
 
-        console.log(returnData);
+        console.log(returnData,"check return data from url");
         console.log(selectedFileUrls);
         const fileIndex = selectedFileUrls.findIndex(file => file.name === returnData.inputFiles.name);
         console.log(fileIndex);
@@ -233,7 +234,7 @@ export class UploadEvent {
     });
   }
   private _getMapshaperUtil(returnData) {
-    const mapshaperUtil = new MapshaperUtil();
+    const mapshaperUtil = new MapshaperUtil(this.authObsr);
     mapshaperUtil.mapshaperUtilCallback = (featureCollection, files) => {
       console.log('what is here project file data', files, files['input.shp'], returnData);
       // Here taking shp file name as zip file name, because of geoserver taking shp file from zip.
@@ -592,7 +593,7 @@ export class UploadEvent {
         translation_y = '0';
         rotateConditionOne = '0';
         rotateConditionTwo = '0';
-        this.epsgCode = this.basemapService.projection3857Code;
+        this.epsgCode = this.basemapService.getBasemapByType().Projection;
       }
       const extent = this.imgProjCoordinateSysCal(translation_x, translation_y, xScale, yScale,
          rotateConditionOne, rotateConditionTwo, imageData, jpgURL);
@@ -638,7 +639,7 @@ export class UploadEvent {
     };
     let jgwxData = metadata.geodata;
     const xmlData = metadata.xmldata;
-    const epsgCode = this.basemapService.projection3857Code;
+    const epsgCode = this.basemapService.getBasemapByType().Projection;
     jgwxData = jgwxData.split('\n');
     const xScale = +jgwxData[0];
     const yScale = +jgwxData[3];

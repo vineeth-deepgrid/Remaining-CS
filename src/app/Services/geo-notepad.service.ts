@@ -410,6 +410,7 @@ export class GeoNotePadService {
     this.basemap.addInteraction(this.draw);
     this.snap = new Snap({source: this.source});
     this.basemap.addInteraction(this.snap);
+  
 
     // if (drawType === this.shapeDrawType.POINT) {
     //   this.listener = this.basemap.on('singleclick', (evt) => {
@@ -995,17 +996,5 @@ getStoredFunction(){
     getGlobalObject(){
       return this.GlobalObject
     }
-
-    // getAllSites(globalObject){
-    //   const bodyData = {
-    //     projectId: 0,
-    //     topicId: 0,
-    //     placeId: 0,
-    //     searchText: '',
-    //     siteType: 'ALL',
-    //     noOfDays: 0
-    // }
-    //   return this.http.post(${this.serverUrl2}/api/v2/geobases/${globalObject.geobase.sessionId}/geopads/${globalObject.geobase.geopadId}/sites/,bodyData)
-    // }
 
 }

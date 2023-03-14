@@ -2,6 +2,7 @@ import { FileUtil } from './fileUtil';
 import { UploadEvent } from '../events/upload-event';
 import { BasemapService } from 'src/app/basemap/basemap.service';
 import { AngularFireStorage } from '@angular/fire/storage/storage';
+import { AuthObservableService } from 'src/app/Services/authObservableService';
 
 export class MapshaperUtil {
   private SHP_EXTENSION_CONSTANT: string = '.shp';
@@ -12,7 +13,7 @@ export class MapshaperUtil {
   public mapshaperUtilCallback: (featureCollections, files) => any;
   fileUtil;
 
-  constructor() {
+  constructor(public authObsr : AuthObservableService ) {
     this.fileUtil = new FileUtil(new BasemapService(), this.firestorage);
   }
 

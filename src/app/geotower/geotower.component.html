@@ -17,8 +17,8 @@
         (towerEleEmit)="towerEleEmit($event)" [towerOrderEleEmit]="towerOrderEleEmit">
       </app-tower-scroller>
       <!-- <div *ngIf="!scrollerIsActive" class="tower-before"></div> -->
-      <div class="tower-container" style="max-height: 300px; position: relative; bottom: 75px; bottom: 100px; margin-left: -10px;" 
-        [ngStyle]="{'border-radius': !geotowerMaximized ? 45 + '%' : 0}">
+      <div class="tower-container" style=" position: relative; bottom: 75px; bottom: 100px; margin-left: -10px;" 
+        >
         <div [ngStyle]="{'width': towerWidth+'px', height: layerOptionsHeight+'px' }" *ngIf="scrollerIsActive" class="tower-before-noscroll tower-cap"></div>
         
         <!-- <div style="display: flex;"> -->
@@ -62,14 +62,12 @@
             </li> 
           </ul>
         </div> -->
-        <div cdkDropList class="example-list"
-        (cdkDropListDropped)="drop($event)" 
-        [ngStyle]="{
-          'width': !geotowerMaximized ? (paddingForScrollSpace+70)+'px' : (paddingForScrollSpace+100+towerOptionsWidth+trailingSpace)+'px'
-        }" >
-          <div *ngFor="let layer of layersList; let i = index;" cdkDrag [cdkDragDisabled]="geotowerMaximized" [ngStyle]="{'z-index': (layersList.length-i)*3, 'direction': 'ltr', 'margin-left': '20px' }">
-            <div class="example-custom-placeholder" *cdkDragPlaceholder></div>  
+        <div cdkDropList (cdkDropListDropped)="drop($event)">
+        
+          <div cdkDrag  *ngFor="let layer of layersList; let i = index;"  [ngStyle]="{'z-index': (layersList.length-i)*2, 'direction': 'ltr', 'margin-left': '20px' }">
+           
             <app-mini-tower-item
+            
                 [ngStyle]="{'height':getHeight()}" 
                 (isAnyLayerOptionsActive)="layerItemOptActive($event)" 
                 (saveTowerLayer)="saveTowerLayerFun($event)"
@@ -103,10 +101,9 @@
         <div #draggingTower [ngStyle]="{
           'width': towerWidth+'px', 
           'height': layerOptionsHeight+'px',
-          'margin-left': '45px',
+          
           'z-index': 1,
-          'position' : 'absolute',
-          'margin-top': '-39px'
+          'position' : 'absolute'
         }" 
         class="tower-before-noscroll" style="display: none;"></div>
         <div style="padding-left: 45px; display: none;">
@@ -145,14 +142,14 @@
         <!-- <div [ngStyle]="{'width': towerWidth+'px', height: layerOptionsHeight+'px' }" *ngIf="scrollerIsActive" class="tower-before-noscroll tower-bottom"></div> -->
 
         <!-- Custom Tooltip -->
-        <div class="custom-tooltip-container" *ngIf="showTooltip">
+        <!-- <div class="custom-tooltip-container" *ngIf="showTooltip">
           <div class="msg-container">
             <p class="msg">Click here to change basemap</p>
             <span class="close-icon1" (click)="showTooltip=false;">&#10006;</span>
           </div>
           <div class="tooltip-arrow"></div>
         </div>
-      </div>
+      </div> -->
       <!-- <select [ngStyle]="{'left': towerWidth+45+'px', 'bottom': '95px'}"
             [towerWidth]="towerWidth"
             [towerOptionsWidth]="towerOptionsWidth" *ngIf='isBaseMapOptActive' class='map-types' 

@@ -12,8 +12,12 @@ import { get } from 'ol/proj';
 import proj4 from 'proj4';
 import { register } from 'ol/proj/proj4.js';
 import OlTileLayer from 'ol/layer/Tile';
-import {get as getProjection} from 'ol/proj.js'
+import { GeosolComponent } from '../geosol/geosol.component';
+import { AuthObservableService } from '../Services/authObservableService';
+import {get as getProjection} from 'ol/proj.js';
 import { transform } from 'ol/proj';
+
+// import {testing} from "../geosol/geosol.component"
 
 
 proj4.defs(
@@ -35,7 +39,6 @@ proj4.defs(
   "+proj=utm +zone=32 +ellps=intl " +
     "+towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs"
 );
-
 proj4.defs(
   "EPSG:5479",
   "+proj=lcc +lat_1=-76.66666666666667 +lat_2=" +
@@ -53,65 +56,60 @@ proj4.defs(
   "+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 " +
     "+x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"
 );
-
 proj4.defs(
   "EPSG:2163",
   "+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 " +
     "+a=6370997 +b=6370997 +units=m +no_defs"
 );
-
 proj4.defs(
   "ESRI:54009",
   "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 " + "+units=m +no_defs"
 );
-
 proj4.defs(
   "EPSG:2229",
   "+proj=lcc +lat_1=35.46666666666667 +lat_2=34.03333333333333 +lat_0=33.5 +lon_0=-118 +x_0=2000000.0001016" +
    "+y_0=500000.0001016001 +ellps=GRS80 +datum=NAD83 +to_meter=0.3048006096012192 +no_defs "
 );
-
+proj4.defs(
+  "EPSG:2100",
+  "+proj=tmerc +lat_0=0 +lon_0=24 +k=0.9996 +x_0=500000 +y_0=0 " + 
+  "+ellps=GRS80 +towgs84=-199.87,74.79,246.62,0,0,0,0 +units=m +no_defs "
+);
+proj4.defs(
+  "EPSG:26911",
+  "+proj=utm +zone=11 +ellps=GRS80 +datum=NAD83 +units=m +no_defs "
+)
 register(proj4);
 
 const proj27700 = getProjection('EPSG:27700');
-// console.log(proj27700)
-// JSON.stringify(proj27700);
+// proj27700.setExtent([1393.0196, 13494.9764, 671196.3657, 1230275.0454]);
 
 const proj23032 = getProjection("EPSG:23032");
-// console.log(proj23032,"123")
-// JSON.stringify(proj23032);
-// console.log(proj23032,"356")
-
-const proj6933 = getProjection("EPSG:6933");
-
 // proj23032.setExtent([-1206118.71, 4021309.92, 1295389.0, 8051813.28]);
 
 const proj5479 = getProjection("EPSG:5479");
-// JSON.stringify(proj5479);
-
 // proj5479.setExtent([6825737.53, 4189159.8, 9633741.96, 5782472.71]);
 
 const proj21781 = getProjection("EPSG:21781");
-// JSON.stringify(proj21781);
-
 // proj21781.setExtent([485071.54, 75346.36, 828515.78, 299941.84]);
 
 const proj3413 = getProjection("EPSG:3413");
-// JSON.stringify(proj3413);
-
 // proj3413.setExtent([-4194304, -4194304, 4194304, 4194304]);
 
 const proj2163 = getProjection("EPSG:2163");
-// JSON.stringify(proj2163);
-
 // proj2163.setExtent([-8040784.5135, -2577524.921, 3668901.4484, 4785105.1096]);
 
 const proj54009 = getProjection("ESRI:54009");
-// JSON.stringify(proj54009);
-
 // proj54009.setExtent([-18e6, -9e6, 18e6, 9e6]);
+
 const proj2229 = getProjection("EPSG:2229");
-proj2229.setExtent([5528230.8160, 1384701.5952, 7751890.9134, 2503239.6463]);
+// proj2229.setExtent([5528230.8160, 1384701.5952, 7751890.9134, 2503239.6463]);
+
+const proj2100 = getProjection("EPSG:2100");
+// proj2100.setExtent([-34387.6695, 3691163.5140, 1056496.8434, 4641211.3222]);
+
+const proj26911= getProjection("EPSG:26911");
+// proj26911.setExtent([202273.9130, 2989975.9668, 797726.0870, 8696934.7173]);
 
 const proj3857 = getProjection("EPSG:3857");
 
@@ -134,6 +132,7 @@ export class BasemapService {
   @Output() onGeobarDataAddingToPopup: EventEmitter<any> = new EventEmitter();
 
   public isOrientationEvent = false;
+  public finalProjection: any;
 
   projectionsList = [
     {name: 'EPSG:27700', projection : proj27700},
@@ -160,7 +159,6 @@ export class BasemapService {
   public getCurrentBasemap(): OlMap {
     return this._currentMap;
   }
-
   setMouseIcon(iconURL) {
     this.iconChanger.emit(iconURL);
   }
@@ -184,7 +182,6 @@ export class BasemapService {
   setLoadOrientationValue(DegValue) {
     this.onLoadOrientation.emit(DegValue);
   }
-
   getSourceProjection(inputvalue){
     console.log(inputvalue,"check input value in service")
     var projection;
@@ -197,9 +194,10 @@ export class BasemapService {
   return projection
   }
 
-
   // TODO: It should be good to initialize map in constructor
-  public getBasemapByType(baseMapType: string, options) {
+  public getBasemapByType(baseMapType?: string, options? ) {
+    console.log(baseMapType,options,"check in services")
+
     const geolocation = new Geolocation({
       tracking: true
     });
@@ -212,6 +210,7 @@ export class BasemapService {
     const basemapFactory = new BasemapFactory(baseMapType);
     const mapLayer: OlTileLayer = basemapFactory.getBaseMap().getMapTileLayer();
     mapLayer.setVisible(true);
+    var map_projection = getProjection(options.projection)
     this._currentMap = new OlMap({
       controls: defaultControls().extend([
         new ScaleLine({
@@ -227,11 +226,17 @@ export class BasemapService {
       view: new OlView({
         center: [options.longitude, options.latitude],
         zoom: options.zoom,
+
         // #TODO: Need to remove this if this is not required.
-        projection: this.projection3857Code,
-        constrainRotation: false
-      })
+      //  projection2955Code: this.projection2955Code,
+        projection: map_projection,
+        constrainRotation: false,
+        // extent: map_projection.getExtent()
+      }),
     });
+    
+    this.finalProjection= this.getCurrentBasemap().getView().getProjection()
+    console.log(this.finalProjection,"check the projection")
     if (options.pageType === 'DEFAULT') {
       this.userLocation();
     }
@@ -254,12 +259,13 @@ export class BasemapService {
     });
     this.loadAllBaseMaps(options);
     return this._currentMap;
-  }
-
+  
+  }  
   public loadAllBaseMaps(options) {
+
     let _basemapFactory = new BasemapFactory('openstreet');
     this._currentMap.addLayer(_basemapFactory.getBaseMap().getMapTileLayer());
-    _basemapFactory = new BasemapFactory('satellite');
+     _basemapFactory = new BasemapFactory('satellite');
     this._currentMap.addLayer(_basemapFactory.getBaseMap().getMapTileLayer());
     _basemapFactory = new BasemapFactory('terrain');
     this._currentMap.addLayer(_basemapFactory.getBaseMap().getMapTileLayer());

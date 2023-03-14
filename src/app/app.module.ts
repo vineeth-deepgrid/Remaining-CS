@@ -88,6 +88,7 @@ import { PrototypeWindowComponent } from './geotray/prototype-window/prototype-w
 import {MatExpansionModule} from '@angular/material/expansion';
 import { PrototypePopupComponent } from './geotray/prototype-popup/prototype-popup.component';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+import { LongPressDirective } from './geotower/tower-item/long-press.directive';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   };
 
@@ -171,7 +172,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MiniTowerItemComponent,
     // PropertyWindowComponent,
     PrototypeWindowComponent,
-    PrototypePopupComponent
+    PrototypePopupComponent,
+    LongPressDirective,
+    GeosolComponent
   ],
   entryComponents: [],
   providers: [

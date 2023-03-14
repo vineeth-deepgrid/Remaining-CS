@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Injectable } from '@angular/core';
 import { BasemapService } from './basemap.service';
 import { Subject } from 'rxjs';
 import Geolocation from 'ol/Geolocation';
@@ -9,6 +9,7 @@ import { AuthObservableService } from '../Services/authObservableService';
   templateUrl: './basemap.component.html',
   styleUrls: ['./basemap.component.scss']
 })
+@Injectable()
 export class BasemapComponent implements OnInit {
 
   @Input() basemapType: string;

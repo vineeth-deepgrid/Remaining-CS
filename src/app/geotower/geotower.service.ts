@@ -9,11 +9,22 @@ import { Router } from '@angular/router';
 import { DeleteUtil } from './util/deleteUtil';
 import { SetLayerTOMapUtil } from './util/setLayerToMapUtil';
 import { CommonService } from '../Services/common.service';
+import { Observable, Subject } from 'rxjs';
+import { AuthObservableService } from '../Services/authObservableService';
+import { GeosolComponent } from '../geosol/geosol.component';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class GeotowerService {
+  private subject= new Subject<any>();
+  sendDelEvent(){
+    this.subject.next();
+  }
+  getDelEvent(): Observable<any>{ 
+    return this.subject.asObservable();
+  }
   public geotowerLayersList = [];
   public geotowerClientLayersMap = new Map();
   public clientObjList = [];

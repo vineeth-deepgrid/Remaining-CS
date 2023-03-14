@@ -185,7 +185,6 @@ export class GeotrayMenuComponent implements OnInit, AfterViewInit, OnChanges {
     console.log(e);
     console.log(e.ctrlKey);
     if (wing.title === 'GPTB') {
-      console.log("i am selected")
       if (e.ctrlKey){
         this.showSubOptions = true;
         this.resetWingSelection();

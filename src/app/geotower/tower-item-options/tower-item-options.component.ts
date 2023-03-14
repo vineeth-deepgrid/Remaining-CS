@@ -27,6 +27,7 @@ import { interval, Observable, Subscription } from 'rxjs';
 export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() layerData: any;
   @Input() isGroup: any;
+  clickEventsubscription:Subscription;
   // @Input() layerItemOptActive: EventEmitter<any>;
   @Input() groupLayerItemOptActive: EventEmitter<any>;
   @ViewChild('layeraction') layeractionEle: ElementRef<HTMLDivElement>;
@@ -37,7 +38,7 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
   @Output() sliderVal: EventEmitter<any> = new EventEmitter<any>();
   previewIsActive = false;
   private mapLayersList = new Map();
-  private paramWorkspaceName: any;
+  static paramWorkspaceName: any;
   private PREVIEWISACTIVE_CONSTANT = 'previewIsActive';
   private LAYERDATA_CONSTANT = 'layerData';
   @ViewChild(DbfTableComponent) dbftableComp: DbfTableComponent;
@@ -62,12 +63,25 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
   intervalDuaration = 5000;
   isHovered = false;
   alertRendered = false;
+  static JPG_EXTENSION_CONSTANT: any;
+  static alertRendered: boolean;
+  
+  static showLayer: any;
+  
+  
+  static commonService: any;
+  static removeLayerFromMapAndRefreshTower: any;
+  static options: { parmWorkspaceName: any; layerObj: any; basemapProjection: any; };
+ 
+  
 
 
   constructor(private configService: ConfigServices, private baseMapService: BasemapService,
-              private ngProgress: NgProgress, private layersService: LayersService,
+              private ngProgress: NgProgress, layersService: LayersService,
               private geotowerService: GeotowerService, private route: ActivatedRoute,
-              private commonService: CommonService) { }
+              private commonService: CommonService) {
+                
+               }
 
   ngOnInit(): any {
     this.intervalObservable = interval(this.intervalDuaration);
@@ -77,6 +91,7 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
     } else {
       console.log('DATA QUERY INTERVAL EXIST.');
     }
+    
   }
 
   ngOnDestroy(): void{
@@ -107,6 +122,8 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
       this.interValSubs.unsubscribe();
     }
   }
+
+ 
 
   startInterval(): void{
     // console.log('In start interval');
@@ -173,7 +190,7 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
       });
     }
     const subscribe = this.route.params.subscribe(params => {
-      this.paramWorkspaceName = params.workspacename;
+      TowerItemOptionsComponent.paramWorkspaceName = params.workspacename;
     });
   }
   ngOnChanges(change: { [key: string]: SimpleChange }): any {
@@ -212,13 +229,13 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
     this.geotowerService.activateEvent(options, 'DisplayLayer');
   }
 
-  saveLayer(event): any {
-    const options = {
+  static saveLayer(layer,basemapser): any {
+    TowerItemOptionsComponent.options = {
       parmWorkspaceName: this.paramWorkspaceName,
-      layerObj: this.layerData, basemapProjection: this.baseMapService.getBaseMapProjection()
+      layerObj: layer, basemapProjection: basemapser.getBaseMapProjection()
     };
     // this.geotowerService.activateEvent(options, 'SaveData');
-    this.saveTowerLayer.emit(options);
+   //this.saveTowerLayer.emit( TowerItemOptionsComponent.options);
   }
 
   layerSlider(event): any {
@@ -238,11 +255,11 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
     }
   }
 
-  panToLayer(event): any {
-    console.log('Layer data for testing ', this.layerData, this.baseMapService.getCurrentBasemap().getLayers());
-    this.baseMapService.setLoadScaleLine();
-    const baseMap = this.baseMapService.getCurrentBasemap();
-    const layer = this.layerData;
+    public static panToLayer(basemapp,layerr): any {
+    console.log('Layer data for testing ', layerr, basemapp.getCurrentBasemap().getLayers());
+    basemapp.setLoadScaleLine();
+    const baseMap = basemapp.getCurrentBasemap();
+    const layer = layerr;
     if (layer.previewLayer) {
       const extent = [];
       if (layer.isServer && layer.metadata !== null) {
@@ -327,14 +344,12 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
     return extent;
   }
 
-  deleteLayer(event): any {
+  public static deleteLayer(layerrr,towerId,layerser,geotowerser,basempaser): any {
     this.alertRendered = true;
-    const confirmRes = confirm(`Do you want to delete layer with name: ${this.layerData.name}`);
+    const confirmRes = confirm(`Do you want to delete layer with name: ${layerrr.name}`);
     if (confirmRes) {
-      console.log('what is event & layerData in Delete Layer', this.towerId, event, this.layerData, this.layerData.previewLayer);
-      if (this.layerData.previewLayer) {
-        this.showLayer(event);
-      }
+      console.log('what is event & layerData in Delete Layer', towerId,  layerrr, layerrr.previewLayer);
+      
       // this.geotowerService.clientObjList.splice(this.geotowerService.clientObjList.indexOf(this.layerData.name), 1);
       // this.geotowerService.geotowerLayersList.splice(this.geotowerService.geotowerLayersList.indexOf(this.layerData.name), 1);
 
@@ -342,27 +357,98 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
       /* console.log('what is event & layerData ', event, this.layerData,
         this.geotowerService.clientObjList, this.geotowerService.geotowerClientLayersMap, this.geotowerService.geotowerLayersList,
         ); */
-      if (this.layerData.isServer) {
-          this.layersService.deleteTowerLayerRelation(this.towerId, this.layerData.layerId)
-            .subscribe(result => {
-              console.log('Deleted towerId LayerId relation', result);
-              this.removeLayerFromMapAndRefreshTower();
-              if (!this.commonService.isValid(result)) {
-                console.log('Layer Deletion from relation table');
-              } else {
-                console.log('No layer deleted');
-              }
-            }, error => {
-              console.log('Error while Deleting the Layer');
-              console.log(error);
-              this.alertRendered = true;
-              window.alert(`Layer ${this.layerData.name} deletion failed...`);
-              this.alertRendered = false;
-              if (error.errorCode === 500) {
-              }
-          });
-      } else {
-        this.removeLayerFromMapAndRefreshTower();
+      // if (layerrr.isServer) {
+      //     layerser.deleteTowerLayerRelation(towerId,layerrr.layerId)
+      //       .subscribe(result => {
+      //         console.log('Deleted towerId LayerId relation', result);
+      //         geotowerser.clientObjList.forEach((obj, index) => {
+      //           if (obj.name === layerrr.name) {
+      //             geotowerser.clientObjList.splice(index, 1);
+      //           }
+      //         });
+      //         geotowerser.geotowerLayersList.forEach((obj, index) => {
+      //           if (obj.name === layerrr.name) {
+      //             geotowerser.geotowerLayersList.splice(index, 1);
+      //           }
+      //         });
+      //         // this.geotowerService.activateEvent(options, 'DeleteLayer');
+      //         /* console.log('what is event & layerData ', event, this.layerData,
+      //           this.geotowerService.clientObjList, this.geotowerService.geotowerClientLayersMap, this.geotowerService.geotowerLayersList,
+      //           ); */
+      //         geotowerser.getCurrentBasemap().getLayers().forEach(layer => {
+      //           console.log('delete event layer is ', layer);
+      //           if (layer !== undefined) {
+      //             if (layer.values_.name === layerrr.name) {
+      //               console.log('this layer need to delete from map ');
+      //               basempaser.getCurrentBasemap().removeLayer(layer);
+      //               if (layerrr.fileType === '.kml' || layerrr.fileType === '.kmz' ||
+      //                   layerrr.fileType === 'kml' || layerrr.fileType === 'kmz') {
+      //                     basempaser.getCurrentBasemap().getLayers().forEach(layer => {
+      //                       if (layer !== undefined) {
+      //                         if (layer.values_.name === layerrr.name  + '_jpg') {
+      //                           console.log('this layer need to delete from map, its kml hidden image map');
+      //                          basempaser.getCurrentBasemap().removeLayer(layer);
+      //                         }
+      //                       }
+      //                     });;
+      //                 }
+      //             }
+      //           }
+      //         });
+      //         geotowerser.deleteEventTowerRefresh();
+      //         geotowerser.towerScrollEventTrigger();
+      //         if (!this.commonService.isValid(result)) {
+      //           console.log('Layer Deletion from relation table');
+      //         } else {
+      //           console.log('No layer deleted');
+      //         }
+      //       }, error => {
+      //         console.log('Error while Deleting the Layer');
+      //         console.log(error);
+      //         this.alertRendered = true;
+      //         window.alert(`Layer ${layerrr.name} deletion failed...`);
+      //         this.alertRendered = false;
+      //         if (error.errorCode === 500) {
+      //         }
+      //     });
+      // }
+        {
+        geotowerser.clientObjList.forEach((obj, index) => {
+          if (obj.name === layerrr.name) {
+            geotowerser.clientObjList.splice(index, 1);
+          }
+        });
+        geotowerser.geotowerLayersList.forEach((obj, index) => {
+          if (obj.name === layerrr.name) {
+            geotowerser.geotowerLayersList.splice(index, 1);
+          }
+        });
+        // this.geotowerService.activateEvent(options, 'DeleteLayer');
+        /* console.log('what is event & layerData ', event, this.layerData,
+          this.geotowerService.clientObjList, this.geotowerService.geotowerClientLayersMap, this.geotowerService.geotowerLayersList,
+          ); */
+        basempaser.getCurrentBasemap().getLayers().forEach(layer => {
+          console.log('delete event layer is ', layer);
+          if (layer !== undefined) {
+            if (layer.values_.name === layerrr.name) {
+              console.log('this layer need to delete from map ');
+              basempaser.getCurrentBasemap().removeLayer(layer);
+              if (layerrr.fileType === '.kml' || layerrr.fileType === '.kmz' ||
+                  layerrr.fileType === 'kml' || layerrr.fileType === 'kmz') {
+                    basempaser.getCurrentBasemap().getLayers().forEach(layer => {
+                      if (layer !== undefined) {
+                        if (layer.values_.name === layerrr.name  + '_jpg') {
+                          console.log('this layer need to delete from map, its kml hidden image map');
+                         basempaser.getCurrentBasemap().removeLayer(layer);
+                        }
+                      }
+                    });;
+                }
+            }
+          }
+        });
+        geotowerser.deleteEventTowerRefresh();
+        geotowerser.towerScrollEventTrigger();
       }
       this.alertRendered = false;
     } else {
@@ -412,12 +498,12 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
     });
   }
 
-  showDBFData($event): any {
+  static showDBFData(layer,basemapser): any {
     // this.showDBFtable = true;
-    console.log('what is event and layer data ', $event, this.layerData);
+    console.log('what is event and layer data ', layer);
     const featureProperties = [];
     const featurePropertieHeders = [];
-    this.layerData.metadata[0].features.forEach((feature, index) => {
+    layer.metadata[0].features.forEach((feature, index) => {
       if (index === 0) {
         for (const [key, value] of Object.entries(feature.properties)) {
           featurePropertieHeders.push(key);
@@ -426,19 +512,19 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
       featureProperties.push(feature.properties);
     });
     console.log('final dbf data is ', featureProperties, featurePropertieHeders);
-    if (this.baseMapService.getCurrentBasemap().getOverlays().array_.length > 0) {
-      this.baseMapService.getCurrentBasemap().getOverlays().array_.forEach(overLayObj => {
+    if (basemapser.getCurrentBasemap().getOverlays().array_.length > 0) {
+      basemapser.getCurrentBasemap().getOverlays().array_.forEach(overLayObj => {
         if (overLayObj.id === 'dbftable') {
-          this.baseMapService.getCurrentBasemap().removeOverlay(overLayObj);
+          basemapser.getCurrentBasemap().removeOverlay(overLayObj);
         }
       });
     }
     let overLay;
-    this.dbftableComp.setPropertyValues(featureProperties, featurePropertieHeders);
-    overLay = this.dbftableComp.getdbfTablePopup();
-    overLay.setPosition(this.baseMapService.getCurrentBasemap().getView().getCenter());
+    DbfTableComponent.setPropertyValues(featureProperties, featurePropertieHeders);
+    overLay = DbfTableComponent.getdbfTablePopup();
+    overLay.setPosition(basemapser.getCurrentBasemap().getView().getCenter());
     overLay.id = 'dbftable';
-    this.baseMapService.getCurrentBasemap().addOverlay(overLay);
+    basemapser.getCurrentBasemap().addOverlay(overLay);
     // const popupComp = this.popupComponent;
     // this._overlay = popupComp.getGeoPopup();
     // popupComp.setContent('multi-layer-info', featureProperties);

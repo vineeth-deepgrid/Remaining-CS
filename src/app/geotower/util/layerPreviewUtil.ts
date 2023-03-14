@@ -32,6 +32,7 @@ import { register } from 'ol/proj/proj4.js';
 import { unByKey } from 'ol/Observable.js';
 import proj4 from 'proj4';
 import { fromArrayBuffer } from 'geotiff';
+import { AuthObservableService } from '../../Services/authObservableService';
 import $ from 'jquery';
 export class LayerPreviewUtil {
   private PREVIEWISACTIVE_CONSTANT = 'previewIsActive';
@@ -54,7 +55,8 @@ export class LayerPreviewUtil {
   commonService: CommonService = new CommonService();
   constructor(private configService: ConfigServices, public baseMapService: BasemapService) {
     this.basemapProjection = this.baseMapService.getCurrentBasemap().getView().getProjection().code_;
-  }
+
+}
 
   public displayLayer(options): any {
     console.log('display layer on map ', options);
@@ -246,7 +248,7 @@ export class LayerPreviewUtil {
         imageExtent = extent3857;
       } else {
         isGeorefData = false;
-        epsgCode = this.baseMapService.projection3857Code;
+        epsgCode = this.baseMapService.getCurrentBasemap().getView();
         const parser = new xml2js.Parser({ strict: false, trim: true });
         parser.parseString(xmlData, (err, result) => {
           const obj = result;
