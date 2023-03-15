@@ -292,14 +292,13 @@
               }"
             >
               <input
-              [disabled]="frameworkForm.get('framework').value === 'angular'"
-              type="radio"
+                [disabled]="frameworkForm.get('framework').value === 'angular'"
+                type="radio"
                 id="Rectangular"
                 formControlName="framework"
                 name="framework"
                 value="Rectangular"
-                (change)=  "radioButtonState = !radioButtonState"
-
+                (change)="radioButtonState = !radioButtonState"
               />
               <label for="Rectangular">
                 <!-- Rectangular -->
@@ -310,78 +309,196 @@
                   </div>
 
                   <div
-                  class="recimgdropdown"
-                  style="
-                    border: 1px solid;
-                    position: relative;
-                    width: 96px;
-                    height: 17px;
-                    top: 7px;
-                  "
-                >
-                  <div class="epsgname">
-                    {{ rectangularepsg }}
-                  </div>
-  
-                  <div
+                    class="recimgdropdown"
                     style="
-                      top: 1px;
-                      left: 79px;
-                      width: 12px;
-                      height: 12px;
-                      position: absolute;
+                      border: 1px solid;
+                      position: relative;
+                      width: 96px;
+                      height: 17px;
+                      top: 7px;
                     "
-                    class="rectangulardropdown"
-                    (click)="openrectangulardropdown()"
-                    [ngClass]="{
-                      rectangulardropdownactive: radioButtonState,
-                      rectangulardropdownnotActive: !radioButtonState,
-                      'rectangulardropdown-checked':
-                        frameworkForm.get('framework').value == 'angular',
-                      'rectangulardropdown-unchecked':
-                        frameworkForm.get('framework').value != 'angular'
-                    }"
                   >
-                    <div>
-                      <select
-                        id="rectangular"
-                        size="6"
-                        class="rectdropdown"
-                        *ngIf="showrectangulardropdown"
-                        (change)="
-                        epsgChangeEvent(
-                            $event.target.value,
-                            $event.target.id
-                          )
-                        "
-                      >
-                        <option value="2100">EPSG:2100</option>
-                        <option value="27700">EPSG:27700</option>
-                        <option value="23032">EPSG:23032</option>
-                        <option value="5479">EPSG:5479</option>
-                        <option value="21781">EPSG:21781</option>
-                        <option value="3413">EPSG:3413</option>
-                        <option value="2163">EPSG:2163</option>
-                        <option value="54009">ESRI:54009</option>
-                        <option value="2229">EPSG:2229</option>
-                        <option value="3857">EPSG:3857</option>
-                        <option value="2225">EPSG:2225</option>
-                        <option value="2226">EPSG:2226</option>
-                        <option value="2227">EPSG:2227</option>
-                        <option value="2228">EPSG:2228</option>
-                        <option value="2229">EPSG:2229</option>
-                        <option value="2230">EPSG:2230</option>
-                        <option value="24378">EPSG:24378</option>
-                        <option value="24379">EPSG:24379</option>
-                        <option value="24380">EPSG:24380</option>
-                        <option value="24381">EPSG:24381</option>
-                        <option value="24382">EPSG:24382</option>
-                        <option value="24383">EPSG:24383</option>
-                        <option value="32601">EPSG:32601</option>
-                      </select>
+                    <div class="epsgname">
+                      {{ rectangularepsg }}
+                    </div>
+
+                    <div
+                      style="
+                        top: 1px;
+                        left: 79px;
+                        width: 12px;
+                        height: 12px;
+                        position: absolute;
+                      "
+                      class="rectangulardropdown"
+                      (click)="openrectangulardropdown()"
+                      [ngClass]="{
+                        rectangulardropdownactive: radioButtonState,
+                        rectangulardropdownnotActive: !radioButtonState,
+                        'rectangulardropdown-checked':
+                          frameworkForm.get('framework').value == 'angular',
+                        'rectangulardropdown-unchecked':
+                          frameworkForm.get('framework').value != 'angular'
+                      }"
+                    >
+                      <div>
+                        <select
+                          id="rectangular"
+                          size="6"
+                          class="rectdropdown"
+                          *ngIf="showrectangulardropdown"
+                          (change)="
+                            epsgChangeEvent(
+                              $event.target.value,
+                              $event.target.id
+                            )
+                          "
+                        >
+                          <option value="3857">EPSG:3857</option>
+                          <option value="2100">EPSG:2100</option>
+                          <option value="2163">EPSG:2163</option>
+                          <option value="27700">EPSG:27700</option>
+                          <option value="23032">EPSG:23032</option>
+                          <option value="21781">EPSG:21781</option>
+                          <option value="3413">EPSG:3413</option>
+                          <option value="5479">EPSG:5479</option>
+                          <option value="54009">ESRI:54009</option>
+                          <option value="2225">EPSG:2225</option>
+                          <option value="2226">EPSG:2226</option>
+                          <option value="2227">EPSG:2227</option>
+                          <option value="2228">EPSG:2228</option>
+                          <option value="2229">EPSG:2229</option>
+                          <option value="2230">EPSG:2230</option>
+                          <option value="24378">EPSG:24378</option>
+                          <option value="24379">EPSG:24379</option>
+                          <option value="24380">EPSG:24380</option>
+                          <option value="24381">EPSG:24381</option>
+                          <option value="24382">EPSG:24382</option>
+                          <option value="24383">EPSG:24383</option>
+                          <option value="32601">EPSG:32601</option>
+                          <option value="32602">EPSG:32602</option>
+                          <option value="32603">EPSG:32603</option>
+                          <option value="32604">EPSG:32604</option>
+                          <option value="32605">EPSG:32605</option>
+                          <option value="32606">EPSG:32606</option>
+                          <option value="32607">EPSG:32607</option>
+                          <option value="32608">EPSG:32608</option>
+                          <option value="32609">EPSG:32609</option>
+                          <option value="32610">EPSG:32610</option>
+                          <option value="32611">EPSG:32611</option>
+                          <option value="32612">EPSG:32612</option>
+                          <option value="32613">EPSG:32613</option>
+                          <option value="32614">EPSG:32614</option>
+                          <option value="32615">EPSG:32615</option>
+                          <option value="32616">EPSG:32616</option>
+                          <option value="32617">EPSG:32617</option>
+                          <option value="32618">EPSG:32618</option>
+                          <option value="32619">EPSG:32619</option>
+                          <option value="32620">EPSG:32620</option>
+                          <option value="32621">EPSG:32621</option>
+                          <option value="32622">EPSG:32622</option>
+                          <option value="32623">EPSG:32623</option>
+                          <option value="32624">EPSG:32624</option>
+                          <option value="32625">EPSG:32625</option>
+                          <option value="32626">EPSG:32626</option>
+                          <option value="32627">EPSG:32627</option>
+                          <option value="32628">EPSG:32628</option>
+                          <option value="32629">EPSG:32629</option>
+                          <option value="32630">EPSG:32630</option>
+                          <option value="32631">EPSG:32631</option>
+                          <option value="32632">EPSG:32632</option>
+                          <option value="32633">EPSG:32633</option>
+                          <option value="32634">EPSG:32634</option>
+                          <option value="32635">EPSG:32635</option>
+                          <option value="32636">EPSG:32636</option>
+                          <option value="32637">EPSG:32637</option>
+                          <option value="32638">EPSG:32638</option>
+                          <option value="32639">EPSG:32639</option>
+                          <option value="32640">EPSG:32640</option>
+                          <option value="32641">EPSG:32641</option>
+                          <option value="32642">EPSG:32642</option>
+                          <option value="32643">EPSG:32643</option>
+                          <option value="32644">EPSG:32644</option>
+                          <option value="32645">EPSG:32645</option>
+                          <option value="32646">EPSG:32646</option>
+                          <option value="32647">EPSG:32647</option>
+                          <option value="32648">EPSG:32648</option>
+                          <option value="32649">EPSG:32649</option>
+                          <option value="32650">EPSG:32650</option>
+                          <option value="32651">EPSG:32651</option>
+                          <option value="32652">EPSG:32652</option>
+                          <option value="32653">EPSG:32653</option>
+                          <option value="32654">EPSG:32654</option>
+                          <option value="32655">EPSG:32655</option>
+                          <option value="32656">EPSG:32656</option>
+                          <option value="32657">EPSG:32657</option>
+                          <option value="32658">EPSG:32658</option>
+                          <option value="32659">EPSG:32659</option>
+                          <option value="32660">EPSG:32660</option>
+                          <option value="32701">EPSG:32701</option>
+                          <option value="32702">EPSG:32702</option>
+                          <option value="32703">EPSG:32703</option>
+                          <option value="32704">EPSG:32704</option>
+                          <option value="32705">EPSG:32705</option>
+                          <option value="32706">EPSG:32706</option>
+                          <option value="32707">EPSG:32707</option>
+                          <option value="32708">EPSG:32708</option>
+                          <option value="32709">EPSG:32709</option>
+                          <option value="32710">EPSG:32710</option>
+                          <option value="32711">EPSG:32711</option>
+                          <option value="32712">EPSG:32712</option>
+                          <option value="32713">EPSG:32713</option>
+                          <option value="32714">EPSG:32714</option>
+                          <option value="32715">EPSG:32715</option>
+                          <option value="32716">EPSG:32716</option>
+                          <option value="32717">EPSG:32717</option>
+                          <option value="32718">EPSG:32718</option>
+                          <option value="32719">EPSG:32719</option>
+                          <option value="32720">EPSG:32720</option>
+                          <option value="32721">EPSG:32721</option>
+                          <option value="32722">EPSG:32722</option>
+                          <option value="32723">EPSG:32723</option>
+                          <option value="32724">EPSG:32724</option>
+                          <option value="32725">EPSG:32725</option>
+                          <option value="32726">EPSG:32726</option>
+                          <option value="32727">EPSG:32727</option>
+                          <option value="32728">EPSG:32728</option>
+                          <option value="32729">EPSG:32729</option>
+                          <option value="32730">EPSG:32730</option>
+                          <option value="32731">EPSG:32731</option>
+                          <option value="32732">EPSG:32732</option>
+                          <option value="32733">EPSG:32733</option>
+                          <option value="32734">EPSG:32734</option>
+                          <option value="32735">EPSG:32735</option>
+                          <option value="32736">EPSG:32736</option>
+                          <option value="32737">EPSG:32737</option>
+                          <option value="32738">EPSG:32738</option>
+                          <option value="32739">EPSG:32739</option>
+                          <option value="32740">EPSG:32740</option>
+                          <option value="32741">EPSG:32741</option>
+                          <option value="32742">EPSG:32742</option>
+                          <option value="32743">EPSG:32743</option>
+                          <option value="32744">EPSG:32744</option>
+                          <option value="32745">EPSG:32745</option>
+                          <option value="32746">EPSG:32746</option>
+                          <option value="32747">EPSG:32747</option>
+                          <option value="32748">EPSG:32748</option>
+                          <option value="32749">EPSG:32749</option>
+                          <option value="32750">EPSG:32750</option>
+                          <option value="32751">EPSG:32751</option>
+                          <option value="32752">EPSG:32752</option>
+                          <option value="32753">EPSG:32753</option>
+                          <option value="32754">EPSG:32754</option>
+                          <option value="32755">EPSG:32755</option>
+                          <option value="32756">EPSG:32756</option>
+                          <option value="32757">EPSG:32757</option>
+                          <option value="32758">EPSG:32758</option>
+                          <option value="32759">EPSG:32759</option>
+                          <option value="32760">EPSG:32760</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
-                </div>
                 </div>
               </label>
             </div>
@@ -393,14 +510,15 @@
               }"
             >
               <input
-              [disabled]="frameworkForm.get('framework').value === 'rectangular'"
-              type="radio"
+                [disabled]="
+                  frameworkForm.get('framework').value === 'rectangular'
+                "
+                type="radio"
                 id="Angular"
                 formControlName="framework"
                 name="framework"
                 value="Angular"
-                (change)=  "radioButtonState = !radioButtonState"
-
+                (change)="radioButtonState = !radioButtonState"
               />
               <label for="Angular">
                 <div class="framework-option-data-container">
@@ -409,59 +527,58 @@
                     <p class="secondary-name">(Longitude & Latitude)</p>
                   </div>
                   <div
-                  class="angimgdropdown"
-                  
-                  style="
-                    border: 1px solid;
-                    width: 96px;
-                    height: 17px;
-                    top: 7px;
-                    position: relative;
-                  "
-                >
-                  <div class="epsgname">
-                    {{ angularepsg }}
-                  </div>
-                  <div
+                    class="angimgdropdown"
                     style="
-                      top: 1px;
-                      left: 79px;
-                      width: 12px;
-                      height: 12px;
-                      position: absolute;
+                      border: 1px solid;
+                      width: 96px;
+                      height: 17px;
+                      top: 7px;
+                      position: relative;
                     "
-                    class="angulardropdown"
-                    [disabled]="
-                    frameworkForm.get('framework').value != 'Angular'
-                  "
-                    (click)="openangulardropdown()"
-                    [ngClass]="{
-                      angulardropdownactive: !radioButtonState,
-                      angulardropdownnotActive: radioButtonState,
-                      'angulardropdown-checked':
-                        frameworkForm.get('framework').value == 'angular',
-                      'angulardropdown-unchecked':
-                        frameworkForm.get('framework').value != 'angular'
-                    }"
                   >
-                    <div>
-                      <select
-                        id="angular"
-                        size="2"
-                        class="angdropdown"
-                        *ngIf="showangulardropdown"
-                        (change)="
-                        epsgChangeEvent(
-                            $event.target.value,
-                            $event.target.id
-                          )
-                        "
-                      >
-                        <option value="4326">EPSG:4326</option>
-                      </select>
+                    <div class="epsgname">
+                      {{ angularepsg }}
+                    </div>
+                    <div
+                      style="
+                        top: 1px;
+                        left: 79px;
+                        width: 12px;
+                        height: 12px;
+                        position: absolute;
+                      "
+                      class="angulardropdown"
+                      [disabled]="
+                        frameworkForm.get('framework').value != 'Angular'
+                      "
+                      (click)="openangulardropdown()"
+                      [ngClass]="{
+                        angulardropdownactive: !radioButtonState,
+                        angulardropdownnotActive: radioButtonState,
+                        'angulardropdown-checked':
+                          frameworkForm.get('framework').value == 'angular',
+                        'angulardropdown-unchecked':
+                          frameworkForm.get('framework').value != 'angular'
+                      }"
+                    >
+                      <div>
+                        <select
+                          id="angular"
+                          size="2"
+                          class="angdropdown"
+                          *ngIf="showangulardropdown"
+                          (change)="
+                            epsgChangeEvent(
+                              $event.target.value,
+                              $event.target.id
+                            )
+                          "
+                        >
+                          <option value="4326">EPSG:4326</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
-                </div>
                 </div>
               </label>
             </div>
