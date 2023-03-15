@@ -173,63 +173,63 @@ export class NotificationBarComponent implements OnInit, AfterViewInit {
       // this.curserPosition = coord;
       this.curserPosition = `${coord[0]}, ${coord[1]}`;
 
-      console.log("check coord",coord);
-      var stringArray = [];
+      //console.log("check coord",coord);
+    //   var stringArray = [];
 
-     var source = this.basemapService.getSourceProjection;
-      var test = this.currentReferenceSystem;
-      console.log(test, 'testtt');
-      var sourceCrs = getProjection(test);
-      console.log(sourceCrs, 'checksourceprojection');
-      var projection = this.sourceproj
+    //  var source = this.basemapService.getSourceProjection;
+    //   var test = this.currentReferenceSystem;
+    //   console.log(test, 'testtt');
+    //   var sourceCrs = getProjection(test);
+    //   console.log(sourceCrs, 'checksourceprojection');
+    //   var projection = this.sourceproj
      
-      const transformed_Coordinates =
-        this.basemapService.getTransformedCoordinates(
-          coord,
-          sourceCrs,  
-          proj4326
-        );
-            console.log(sourceCrs, 'checksourceproj');
+    //   const transformed_Coordinates =
+    //     this.basemapService.getTransformedCoordinates(
+    //       coord,
+    //       sourceCrs,  
+    //       proj4326
+    //     );
+    //         console.log(sourceCrs, 'checksourceproj');
 
-      console.log(transformed_Coordinates, 'checktransformedcoord');
-      console.log(transformed_Coordinates, coord, 'checkdiff');
-      for (let i = 0; i < transformed_Coordinates.length - 1; i++) {
-        stringArray.push(
-          `${transformed_Coordinates[1].toFixed(4)}`,
-          `${transformed_Coordinates[0].toFixed(4)}`
-        );
-      }
-      console.log(stringArray, coord, 'checkstringarrAY');
+    //   console.log(transformed_Coordinates, 'checktransformedcoord');
+    //   console.log(transformed_Coordinates, coord, 'checkdiff');
+    //   for (let i = 0; i < transformed_Coordinates.length - 1; i++) {
+    //     stringArray.push(
+    //       `${transformed_Coordinates[1].toFixed(4)}`,
+    //       `${transformed_Coordinates[0].toFixed(4)}`
+    //     );
+    //   }
+    //   console.log(stringArray, coord, 'checkstringarrAY');
 
-      // New code of Elevation Service
-      const elevator = new google.maps.ElevationService();
-      const location = new google.maps.LatLng(
-        stringArray[0],
-        stringArray[1]
-        // coord[1],
-        // coord[0]
-      ); // { "lat": 39.7391536, "lng": -104.9847034 }
-      console.log('checkeleval', location, coord);
-      elevator
-        .getElevationForLocations({
-          locations: [location],
-        })
+    //   // New code of Elevation Service
+    //   const elevator = new google.maps.ElevationService();
+    //   const location = new google.maps.LatLng(
+    //     stringArray[0],
+    //     stringArray[1]
+    //     // coord[1],
+    //     // coord[0]
+    //   ); // { "lat": 39.7391536, "lng": -104.9847034 }
+    //   console.log('checkeleval', location, coord);
+    //   elevator
+    //     .getElevationForLocations({
+    //       locations: [location],
+    //     })
 
-        .then(({ results }) => {
-          console.log('locationrresults. ', results);
-          // Retrieve the first result
-          if (results[0]) {
-            // Open the infowindow indicating the elevation at the clicked position.
-            console.log(
-              'The elevation at this point is ' + results[0].elevation
-            );
-            this.elevationVal = results[0].elevation.toFixed(2);
-            return results;
-          } else {
-            console.log('No results found');
-          }
-        })
-        .catch((e) => console.log('Elevation service failed due to: ' + e));
+    //     .then(({ results }) => {
+    //       console.log('locationrresults. ', results);
+    //       // Retrieve the first result
+    //       if (results[0]) {
+    //         // Open the infowindow indicating the elevation at the clicked position.
+    //         console.log(
+    //           'The elevation at this point is ' + results[0].elevation
+    //         );
+    //         this.elevationVal = results[0].elevation.toFixed(2);
+    //         return results;
+    //       } else {
+    //         console.log('No results found');
+    //       }
+    //     })
+    //     .catch((e) => console.log('Elevation service failed due to: ' + e));
     });
 
     this.basemap.on('contextmenu', (evt) => {

@@ -516,11 +516,6 @@ export class GeobarComponent
     this.authObsr.unSubscribeForAuthStatus('GeobarComponent');
   }
   ngOnChanges(changes: { [key: string]: SimpleChange }): any {
-    if (
-      this.baseMapService.getCurrentBasemap().getView().getProjection() !==
-      this.baseMapService.projectionsList[8].projection
-    ) {
-    }
     // EXCEL=================================
     if (FileUtil.checkUpload === true) {
       // this.showPDF = true;
