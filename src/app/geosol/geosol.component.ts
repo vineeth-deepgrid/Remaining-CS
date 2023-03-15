@@ -293,6 +293,8 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
   }
   resetSelectedOption(): void {
     this.selectedOption = '';
+    this.showFrameworkForm = false;
+
   }
   selectGeosolOption(currOption): void {
     console.log('clicked the geosol buttons ', this.isGuest, currOption);
@@ -927,8 +929,8 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
     this.showangulardropdown = !this.showangulardropdown;
   }
 
-  angularepsg = 'EPSG:4326';
-  rectangularepsg = 'EPSG:3857';
+  angularepsg = 'EPSGs';
+  rectangularepsg = 'EPSGs';
 
   projectionChangeEvent(epsgCode, id): any {
     this.showrectangulardropdown = false;

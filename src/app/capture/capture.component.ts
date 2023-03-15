@@ -439,6 +439,9 @@ export class CaptureComponent implements OnInit, OnChanges, OnDestroy, AfterView
 
   }
 
+  functionClick(e){
+    console.log("checkevalueeeeeeee",e);
+  }
   checkProjectPlaceTopicAndGetSites(): void{
     console.log('In checkProjectPlaceTopicAndGetSites');
     if (this.projectsDataCollected && this.placesDataCollected && this.topicsDataCollected){

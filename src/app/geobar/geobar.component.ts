@@ -418,10 +418,10 @@ export class GeobarComponent
       this.currentSystemname = res;
       this.exportcordsysname.emit(this.currentSystemname);
       console.log(this.currentSystemname, 'checkcurrentsys');
-      if (res === 'rectangular') {
+      if (this.currentSystemname === 'Rectangular') {
         // this.angularDropdownOptions = [{value: 'EPSG', label: 'EPSGs'}];
         this.showangulardropdown = false;
-      } else if (res === 'angular') {
+      } else if (this.currentSystemname === 'Angular') {
         // this.rectangularDropdownOptions = [{value: 'EPSG', label: 'EPSGs'}];
         this.showrectangulardropdown = false;
       }
@@ -456,8 +456,8 @@ export class GeobarComponent
     this.showangulardropdown = !this.showangulardropdown;
     this.showrectangulardropdown = false;
   }
-  angularepsg = 'EPSG:4326';
-  rectangularepsg = 'EPSG:3857';
+  angularepsg = 'EPSGs';
+  rectangularepsg = 'EPSGs';
   epsgCodee: any;
   epsgChangeEvent(epsgCode,id): any {
     this.showrectangulardropdown = false;
