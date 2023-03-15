@@ -324,7 +324,7 @@ export class BasemapService {
     var projection;
     this.projectionsList.map((x)=>{
       if(x.name === inputvalue){
-          projection = x.name
+          projection = getProjection(x.name)
       }
     })
     console.log(projection,"check projection...")
