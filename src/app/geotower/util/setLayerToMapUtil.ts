@@ -33,6 +33,7 @@ import { Icon, Circle } from 'ol/style.js';
 import $ from 'jquery';
 import { GeosolComponent } from 'src/app/geosol/geosol.component';
 import { OnInit } from '@angular/core';
+import { get as getProjection} from 'ol/proj'
 
 
 export class SetLayerTOMapUtil  {
@@ -124,6 +125,11 @@ export class SetLayerTOMapUtil  {
   }
 
   private setLayerToMap(geoJson): any {
+    const proj3857 = getProjection("EPSG:3857");
+
+    if(this.basemapProjection== undefined){
+      this.basemapProjection = proj3857
+    }
     let isVisible = true;
     console.log('file name ', geoJson.fileName)
     if(geoJson.fileName === 'City_PopRanks' || geoJson.fileName === 'County_PopRanks' || 

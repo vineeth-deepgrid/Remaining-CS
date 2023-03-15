@@ -344,9 +344,15 @@ export class TowerItemOptionsComponent implements OnInit, AfterViewInit, OnChang
     return extent;
   }
 
-  public static deleteLayer(layerrr,towerId,layerser,geotowerser,basempaser): any {
-    this.alertRendered = true;
-    const confirmRes = confirm(`Do you want to delete layer with name: ${layerrr.name}`);
+  public static deleteLayer(layerrr,towerId,layerser,geotowerser,basempaser, config): any {
+    if(config == true){
+      var confirmRes = true
+    }
+    else{
+      this.alertRendered = true;
+      confirmRes = confirm(`Do you want to delete layer with name: ${layerrr.name}`);
+    }
+   
     if (confirmRes) {
       console.log('what is event & layerData in Delete Layer', towerId,  layerrr, layerrr.previewLayer);
       

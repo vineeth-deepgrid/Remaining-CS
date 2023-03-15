@@ -59,6 +59,8 @@ import { Vector } from 'ol/layer'
 import { boundingExtent } from 'ol/extent';
 import { SetLayerTOMapUtil } from '../geotower/util/setLayerToMapUtil.js';
 import { ChangeProjectionService } from '../Services/change-projecton.service.js';
+import { TowerItemOptionsComponent } from '../geotower/tower-item-options/tower-item-options.component.js';
+import { LayersService } from '../Services/layers.service.js';
 
 
 @Component({
@@ -181,7 +183,7 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
     private geotowerService: GeotowerService, private renderer: Renderer2,
     private commonService: CommonService, private formBuilder: FormBuilder,
     private observ: AuthObservableService, private printToolService: PrintToolService,
-    private authObsr: AuthObservableService, private myService: MyService,private changeService:ChangeProjectionService) {
+    private authObsr: AuthObservableService, private myService: MyService,private changeService:ChangeProjectionService, private layersService: LayersService ) {
     config.backdrop = 'static';
     config.keyboard = false;
     this.opts = {
@@ -662,19 +664,30 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
     });
     polygonFeature.setStyle(new Style({
       stroke: new Stroke({
-        color: '#FF0000', // please use color codes
-        width: 1
+      color: '#FF0000', // please use color codes
+      width: 1
       }),
       text: new Text({
-        text: this.epsgCodee,
-        // font: '13px Calibri,sans-serif',
-        textAlign: 'left',
-              justify: 'left',
-              textBaseline: 'top',
-        // backgroundFill: '#000000'
+      text: this.epsgCodee,
+      font: '13px Calibri,sans-serif',
+      textAlign: 'right',
+      justify: 'left',
+      textBaseline: 'top',
+      fill: new Fill({
+      color: 'white',
       }),
-
-    }));
+      padding: [2,2,2,2],
+      backgroundFill: new Fill({
+      color: 'black'
+      }),
+      backgroundStroke: new Stroke({
+      color: 'black',
+      width: 1
+      }),
+      offsetX: bbox[3] ,
+offsetY: bbox[0],
+      })
+      }));
   //  const styleText = vectorLayer.values_.source.featuresRtree_.items_[94].value.style_
   //  console.log(styleText, 'styledtext')
 
@@ -738,31 +751,48 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
     // });
     this.finalProjection = this.basemapService.getCurrentBasemap().getView().getProjection();
     GeosolComponent.mapReference = this.finalProjection
+    var layersCount = this.basemapService.getCurrentBasemap().getLayers()
     this.basemapService.getCurrentBasemap().getLayers().forEach(currentLayer => {
       console.log('layers name', currentLayer.values_.name)
+      for(let i =0; i<layersCount.length; i++){
+        // if(layersCount[i].name)
+        console.log(layersCount[i].name, 'layerscount')
+      }
       for (let i = 0; i < this.geotowerService.clientObjList.length; i++) {
+        console.log(this.geotowerService.clientObjList.length, 'client length')
         this.latestlayername = this.geotowerService.clientObjList[i].name
         console.log(this.latestlayername, 'latestlayer')
         console.log(currentLayer, 'layer values name')
-        if (currentLayer.values_.name === this.geotowerService.clientObjList[i].name) {
+        if (currentLayer.values_.name === this.latestlayername) {
           console.log('layers name', currentLayer.values_.name)
           console.log('layers list', this.geotowerService.clientObjList)
           console.log('got to the sanat layer', currentLayer)
           this.geotowerService.clientObjList.forEach(layerObject => {
+      //       if(layerObject.name== currentLayer.values_.name){
+      //       }
             if (layerObject.name == currentLayer.values_.name) {
-              console.log('layer object', layerObject.name)
-              console.log('layer of geotower', this.geotowerService.clientObjList)
-              const options = { layerObj: layerObject, geotower: this };
-
-              this.geotowerService.activateEvent(options, 'LayerSetToMap')
+              this.basemapService.getCurrentBasemap().removeLayer(layerObject)
+              TowerItemOptionsComponent.deleteLayer(layerObject,{},this.layersService,this.geotowerService,this.basemapService, true) 
+              // setTimeout(() => {
+                console.log('layer object', layerObject.name)
+                console.log('layer of geotower', this.geotowerService.clientObjList)
+                const options = { layerObj: layerObject, geotower: this };
+  
+                this.geotowerService.activateEvent(options, 'LayerSetToMap')
+   
+                console.log('layer object', layerObject.name)
+              // }, 1000);             
+            
             }
+           
           })
           const options = { layerObj: currentLayer, geotower: this };
-
           this.geotowerService.activateEvent(options, 'LayerSetToMap')
         }
-
+     
       }
+   
+
       // const vectorLayers = layers.filter((layer) => layer instanceof VectorLayer);
       // console.log(vectorLayers, 'layeredvector')
       // const vectorLayersRemove = vectorLayers.slice(0, -1);
@@ -795,6 +825,7 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
     // console.log('source is', vectorLayer.getSource());
     console.log('epsgCodee is', this.epsgCodee);
   }
+
   //   private _createClientLayerJsonObj(clientLayerObj): any {
   //     return {
   //       name: clientLayerObj.fileName,
