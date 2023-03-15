@@ -1,20 +1,24 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChangeProjectionService {
-  dataEvent = new EventEmitter<any>();
+  private dataSubject = new Subject<any>();
   
 
 
   constructor() { }
-  sendData(data: any) {
-    console.log(data,"check data in service")
-    this.dataEvent.emit(data);
-    
+  setData(data: any) {
+    this.dataSubject.next(data);
+ 
   }
 
+  getData() {
+    return this.dataSubject.asObservable();
+  }
 
 
 }

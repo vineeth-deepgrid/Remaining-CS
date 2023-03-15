@@ -812,9 +812,11 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
   // };
   //   }
   projectionChangeEvent(epsgCode): any {
+    console.log(epsgCode,"check epsg")
+
     this.epsgCodee = 'EPSG:' + epsgCode;
     this.passInputValue.emit(`${epsgCode}`)
-    this.changeService.sendData(this.epsgCodee)
+    this.changeService.setData(this.epsgCodee)
     // this.finalProjection= this.basemapService.getCurrentBasemap().getView().getProjection();
     console.log('selected epsgCode ', epsgCode);
     console.log('selected epsgCode ', this.epsgCodee);

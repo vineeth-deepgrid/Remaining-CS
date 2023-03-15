@@ -371,7 +371,7 @@ if (this.confirmCurrentNotesClosing.type === 'confirm-close') {
 
 
 ngOnInit(): any {  
-this.changeService.dataEvent.subscribe(output => {
+this.changeService.getData().subscribe((output) => {
 this.countForTransform++
 console.log(this.countForTransform,"check hit number outside")
 console.log(output,"check the emit data")
