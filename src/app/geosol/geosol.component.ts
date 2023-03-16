@@ -1094,15 +1094,15 @@ export class GeosolComponent implements OnInit, AfterViewInit, OnChanges {
         'selected epsg projection value'
       );
       this.myService.trigger();
+
     });
     this.passInputValue.emit(`${epsgCode}`);
     this.emitId.emit(id);
-
   }
 
   namechangeEvent(id){
     console.log(id,"checknameid");
-    // this.emitId.emit(id);
+     this.emitId.emit(id);
 
   }
   private getProjDef(epsgCodee): Observable<any> {
