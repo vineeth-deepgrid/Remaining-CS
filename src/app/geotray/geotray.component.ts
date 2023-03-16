@@ -1,4 +1,17 @@
-import { Component, HostListener, ViewChild, ElementRef, Output, EventEmitter, Input, SimpleChange, OnChanges, AfterViewInit, Renderer2 } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  ViewChild,
+  ElementRef,
+  Output,
+  EventEmitter,
+  Input,
+  SimpleChange,
+  OnChanges,
+  AfterViewInit,
+  Renderer2,
+} from '@angular/core';
+import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { GeotrayService } from './geotray.service';
 import { BasemapService } from '../basemap/basemap.service';
 import { GeoPopupComponent } from '../geopopup/geopopup.component';
@@ -7,11 +20,11 @@ import { CommonService } from '../Services/common.service';
 import { AnalyticsService } from '../Services/analytics.service';
 import { environment } from 'src/environments/environment';
 import { GeotrayMenuComponent } from './geotray-menu/geotray-menu.component';
-import {MatExpansionModule} from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';
 import * as XLSX from 'xlsx';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
-import {fromLonLat} from 'ol/proj';
+import { fromLonLat } from 'ol/proj';
 import { Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
 import { Fill, Stroke, Style, Circle } from 'ol/style';
@@ -27,20 +40,20 @@ import { GeoNotePadService } from '../Services/geo-notepad.service';
 import { TopicsService } from '../Services/topics.service';
 import { CloudFileSelectorComponent } from '../cloud-file-selector/cloud-file-selector.component';
 import { Observable } from 'rxjs';
+import { MyService } from '../my-service.service';
 const AWS: any = (window as any).AWS;
 @Component({
   selector: 'app-geotray',
   templateUrl: './geotray.component.html',
-  styleUrls: ['./geotray.component.scss']
+  styleUrls: ['./geotray.component.scss'],
 })
-
 export class GeotrayComponent implements OnChanges, AfterViewInit {
-  parentFunction(data){
-    console.warn(data,"datazzzzzzzzzzzzzzzzzz")
+  parentFunction(data) {
+    console.warn(data, 'datazzzzzzzzzzzzzzzzzz');
   }
   valueEmittedFromChildComponent: boolean;
-  parentEventHandlerFunction(valueEmitted){
-      this.valueEmittedFromChildComponent = valueEmitted;
+  parentEventHandlerFunction(valueEmitted) {
+    this.valueEmittedFromChildComponent = valueEmitted;
   }
   panelOpenState = false;
   @ViewChild('geotrayHolder') geotrayHolder: ElementRef;
@@ -51,10 +64,10 @@ export class GeotrayComponent implements OnChanges, AfterViewInit {
   @Output() showGeoSessionWindow: EventEmitter<any> = new EventEmitter<any>();
   @Input() closeNotepad: string;
   @Input() closeGeoSession: string;
-  @ViewChild(GeotrayMenuComponent) predefinedClicked : GeotrayMenuComponent;
-  receiveMessage(){
-    this.predefinedClicked= this.predefinedClicked.predefinedVisibility;
-    console.log(this.predefinedClicked,"is visible?/////")
+  @ViewChild(GeotrayMenuComponent) predefinedClicked: GeotrayMenuComponent;
+  receiveMessage() {
+    this.predefinedClicked = this.predefinedClicked.predefinedVisibility;
+    console.log(this.predefinedClicked, 'is visible?/////');
   }
   _isGeotrayActive = false;
   draggable = true;
@@ -67,7 +80,7 @@ export class GeotrayComponent implements OnChanges, AfterViewInit {
     // 'STB',
     'ATB',
     // 'PTB'
-    'GPTB'
+    'GPTB',
   ];
   public wings = this._getWings();
   public gutter = {
@@ -86,69 +99,91 @@ export class GeotrayComponent implements OnChanges, AfterViewInit {
     buttonCrossImgSize: '3%',
     buttonBackgroundColor: '#FFFFFF',
     buttonFontColor: '#FFFFFF',
-    wingFontColor: 'black'
+    wingFontColor: 'black',
   };
   resetAllWings: string;
 
   @Input() isGuest = true;
   afterLoginOperations: any[] = [];
   showTooltip = true;
-@Input() predefinedVisibility;
-@Output() sendPredefindToPrototypeClick: EventEmitter<any> = new EventEmitter<any>();
-onPropertiesClicked = false;
-onPredefinedClicked = false;
-onClassifiedClicked = false;
-onBlendedClicked = false;
-onCollocatedClicked = false;
-onExtendedClicked = false;
-onslopeClicked = false;
-onbufferClicked = false;
+  @Input() predefinedVisibility;
+  @Output() sendPredefindToPrototypeClick: EventEmitter<any> =
+    new EventEmitter<any>();
+  onPropertiesClicked = false;
+  onPredefinedClicked = false;
+  onClassifiedClicked = false;
+  onBlendedClicked = false;
+  onCollocatedClicked = false;
+  onExtendedClicked = false;
+  onslopeClicked = false;
+  onbufferClicked = false;
 
-Colors = ['#9400D3', '#4B0082', '#0000FF', '#00FF00', '#FFFF00', '#FF7F00', '#FF0000'];
-s3: any;
-albumBucketName = 'test-gallery1';
-amazonS3BucketName = 'test-gallery1';
+  Colors = [
+    '#9400D3',
+    '#4B0082',
+    '#0000FF',
+    '#00FF00',
+    '#FFFF00',
+    '#FF7F00',
+    '#FF0000',
+  ];
+  s3: any;
+  albumBucketName = 'test-gallery1';
+  amazonS3BucketName = 'test-gallery1';
   constructor(
-    private basemapService: BasemapService, private authObsr: AuthObservableService,
-    private geotrayService: GeotrayService, private commonService: CommonService,
-    private analytics: AnalyticsService, private geobarService: GeobarService,
-    private renderer: Renderer2, private router: Router, 
-    private geoTowerService: GeotowerService, private geobaseService: GeobaseService, 
-    private notePadService: GeoNotePadService, private topicsService: TopicsService) {
-      AWS.config.region = 'ap-southeast-1'; // Region
-      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-          IdentityPoolId: 'ap-southeast-1:cff13619-42b1-48c7-a470-459b66795b3c',
-      });
-      this.s3 = new AWS.S3({
-        apiVersion: '2006-03-01',
-        params: {Bucket: this.albumBucketName}
-      });
+    private basemapService: BasemapService,
+    private authObsr: AuthObservableService,
+    private geotrayService: GeotrayService,
+    private commonService: CommonService,
+    private analytics: AnalyticsService,
+    private geobarService: GeobarService,
+    private renderer: Renderer2,
+    private router: Router,
+    private geoTowerService: GeotowerService,
+    private geobaseService: GeobaseService,
+    private notePadService: GeoNotePadService,
+    private topicsService: TopicsService,
+    private baseMapService: BasemapService,
+    private formBuilder: FormBuilder,
+    private observ: AuthObservableService,
+    private myService: MyService  ) {
+    AWS.config.region = 'ap-southeast-1'; // Region
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+      IdentityPoolId: 'ap-southeast-1:cff13619-42b1-48c7-a470-459b66795b3c',
+    });
+    this.s3 = new AWS.S3({
+      apiVersion: '2006-03-01',
+      params: { Bucket: this.albumBucketName },
+    });
     if (this.commonService.isValid(localStorage.getItem('token'))) {
       this.isGuest = false;
     } else {
       this.isGuest = true;
     }
-    this.authObsr.subscribeForAuthStatus('GeotowerComponent', (authRes, msg) => {
-      console.log('LOGIN STATUS CHANGED');
-      console.log(authRes);
-      console.log(msg);
-      if (authRes.status === 'success') {
-        this.isGuest = false;
-        this.closeTooltip();
-        // this.runAllWaitingTasks();
-        // this.activateGeoTray(null);
-      } else if (authRes.status === 'failed') {
-        this.isGuest = true;
-        this._isGeotrayActive = false;
+    this.authObsr.subscribeForAuthStatus(
+      'GeotowerComponent',
+      (authRes, msg) => {
+        console.log('LOGIN STATUS CHANGED');
+        console.log(authRes);
+        console.log(msg);
+        if (authRes.status === 'success') {
+          this.isGuest = false;
+          this.closeTooltip();
+          // this.runAllWaitingTasks();
+          // this.activateGeoTray(null);
+        } else if (authRes.status === 'failed') {
+          this.isGuest = true;
+          this._isGeotrayActive = false;
+        }
+        if (!this.isGuest) {
+          console.log('RUN WAITING TASKS');
+          this.runAllWaitingTasks();
+        } else {
+          console.log('CLEARING ALL');
+          this.afterLoginOperations = [];
+        }
       }
-      if (!this.isGuest) {
-        console.log('RUN WAITING TASKS');
-        this.runAllWaitingTasks();
-      } else {
-        console.log('CLEARING ALL');
-        this.afterLoginOperations = [];
-      }
-    });
+    );
   }
 
   @HostListener('window:keyup.esc', ['$event'])
@@ -159,7 +194,6 @@ amazonS3BucketName = 'test-gallery1';
   }
 
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-    
     console.log(changes);
     if (this.commonService.isValid(changes.closeNotepad)) {
       if (!changes.closeNotepad.firstChange) {
@@ -175,13 +209,13 @@ amazonS3BucketName = 'test-gallery1';
     }
   }
 
-  ngAfterViewInit(): void{
+  ngAfterViewInit(): void {
     this.closeTooltip();
   }
 
   private _getWings() {
     const wings = [];
-    this._features.forEach(feature => {
+    this._features.forEach((feature) => {
       wings.push({
         title: feature,
         color: this._wingColor,
@@ -189,7 +223,7 @@ amazonS3BucketName = 'test-gallery1';
         icon: { name: `/assets/right-colored-svg/${feature}.svg` },
         tooltip: this.getTooltipText(feature),
         tooltipclass: this.getTooltipTextClass(feature),
-        placement: this.getTooltipPlacement(feature)
+        placement: this.getTooltipPlacement(feature),
       });
     });
     return wings;
@@ -208,15 +242,13 @@ amazonS3BucketName = 'test-gallery1';
       return 'right';
     } else if (wingName === 'PTB') {
       return 'right';
-    } else if ( wingName === 'GPTB') {
+    } else if (wingName === 'GPTB') {
       return 'right';
-    } else if ( wingName === 'ATB') {
+    } else if (wingName === 'ATB') {
       return 'right';
     }
   }
- 
 
-   
   private getTooltipText(wingName) {
     if (wingName === 'GTB') {
       return 'Geometry! Click/Ctrl-Click to activate measuing tool'; // 'Geometry';
@@ -255,13 +287,15 @@ amazonS3BucketName = 'test-gallery1';
     }
   }
 
-  runAllWaitingTasks(): void{
-    this.afterLoginOperations.forEach(operation => {
-      if ( operation.type === 'showGeoTray') {
+  runAllWaitingTasks(): void {
+    this.afterLoginOperations.forEach((operation) => {
+      if (operation.type === 'showGeoTray') {
         console.log('CALLING SHOW SAVE SHARE SCREEN AFTER LOGIN');
         // this.openSaveShareScreen(operation.data);
         this.showOrHideTray();
-        const index = this.afterLoginOperations.findIndex(op => op.type === 'showGeoTray');
+        const index = this.afterLoginOperations.findIndex(
+          (op) => op.type === 'showGeoTray'
+        );
         if (index !== -1) {
           this.afterLoginOperations.splice(index, 1);
         }
@@ -282,14 +316,16 @@ amazonS3BucketName = 'test-gallery1';
       this.resetAllWingsSelectStatus();
     }
   }
-  public activateGeoTray(event): void{
+  public activateGeoTray(event): void {
     console.log('In activateGeoTray');
     console.log(event);
     if (!this.isGuest) {
       this.showOrHideTray();
     } else {
       // SAVING OPERATION TO PERFORM AFTER LOGIN
-      const index = this.afterLoginOperations.findIndex(op => op.type === 'showGeoTray');
+      const index = this.afterLoginOperations.findIndex(
+        (op) => op.type === 'showGeoTray'
+      );
       if (index === -1) {
         // IF NO REQUEST PRESENT
         this.afterLoginOperations.push({ type: 'showGeoTray' });
@@ -297,7 +333,7 @@ amazonS3BucketName = 'test-gallery1';
         // IF REQUEST PRESENT, SAVING RECENT REQUEST ONLY
         this.afterLoginOperations[index] = { type: 'showGeoTray' };
       }
-      this.authObsr.initiateAuthenticationRequest({from: 'geotray'});
+      this.authObsr.initiateAuthenticationRequest({ from: 'geotray' });
     }
   }
 
@@ -305,19 +341,23 @@ amazonS3BucketName = 'test-gallery1';
     console.log('onWingSelected', selectedToolWing);
     const toolOptions = {
       title: selectedToolWing.title,
-      isCtrlClicked: selectedToolWing.srcEvent./*srcEvent.*/ctrlKey,
-      popupComponent: this.popupComponent
+      isCtrlClicked: selectedToolWing.srcEvent./*srcEvent.*/ ctrlKey,
+      popupComponent: this.popupComponent,
     };
-    if (!String(selectedToolWing.tooltip).includes('Geopad') /*'Remarks'*/ &&
-        !String(selectedToolWing.tooltip).includes('Annotate')) {
+    if (
+      !String(selectedToolWing.tooltip).includes('Geopad') /*'Remarks'*/ &&
+      !String(selectedToolWing.tooltip).includes('Annotate')
+    ) {
       this.geotrayService.activateTool(toolOptions);
     }
-    if (String(selectedToolWing.tooltip).includes('Geopad') /*'Remarks'*/ ||
-        String(selectedToolWing.tooltip).includes('Annotate')) {
+    if (
+      String(selectedToolWing.tooltip).includes('Geopad') /*'Remarks'*/ ||
+      String(selectedToolWing.tooltip).includes('Annotate')
+    ) {
       this.geotrayService.dectivateTools();
       // this.remarkClicked.emit(true);
     }
-    if(selectedToolWing.title === 'QTB') {
+    if (selectedToolWing.title === 'QTB') {
       // here New code for loading prototype related static data
       this.processLoadingStaticDataForPrototype();
     }
@@ -325,23 +365,22 @@ amazonS3BucketName = 'test-gallery1';
   showGeopad(event) {
     this.showGeopadWindow.emit(event);
   }
-  
-  showGeoSession(event){
+
+  showGeoSession(event) {
     this.showGeoSessionWindow.emit(event);
   }
-  
- 
+
   public onWingHovered(selectedToolWing) {
     selectedToolWing.color = '#667BBC';
-    selectedToolWing.icon.name = 'assets/right-white-svg/'
-      + selectedToolWing.title + '.svg';
+    selectedToolWing.icon.name =
+      'assets/right-white-svg/' + selectedToolWing.title + '.svg';
     // console.log('onWingHovered', selectedToolWing);
   }
 
   public onWingHoveredOut(selectedToolWing) {
     selectedToolWing.color = '#FFFFFF';
-    selectedToolWing.icon.name = 'assets/right-colored-svg/'
-      + selectedToolWing.title + '.svg';
+    selectedToolWing.icon.name =
+      'assets/right-colored-svg/' + selectedToolWing.title + '.svg';
     // console.log('onWingHoveredOUt', selectedToolWing);
   }
 
@@ -354,84 +393,78 @@ amazonS3BucketName = 'test-gallery1';
     // this.remarkClicked.emit(false);
   }
   resetAllWingsSelectStatus() {
-    this.wings.forEach(element => {
+    this.wings.forEach((element) => {
       element.selected = false;
       this.onWingHoveredOut(element);
     });
   }
-  closeTooltip(): void{
-    if (!this.isGuest){
+  closeTooltip(): void {
+    if (!this.isGuest) {
       setTimeout(() => {
         this.showTooltip = false;
       }, environment.feUserGuideTooltipAutoCloseDuration);
     }
   }
-  onPredefinedClickedEvent(event){
-    console.log(event,"buttonclicked in geotray")
-    this.onPropertiesClicked =  false;
+  onPredefinedClickedEvent(event) {
+    console.log(event, 'buttonclicked in geotray');
+    this.onPropertiesClicked = false;
     this.onPredefinedClicked = event;
     this.onClassifiedClicked = false;
     this.onBlendedClicked = false;
     this.onCollocatedClicked = false;
     this.onExtendedClicked = false;
-    console.log(this.onPredefinedClicked, "check Predefined")
-    
-    
+    console.log(this.onPredefinedClicked, 'check Predefined');
   }
-  onClassifiedClickedEvent(event){
-    console.log(event,"buttonclicked in geotray")
-    this.onPropertiesClicked =  event;
+  onClassifiedClickedEvent(event) {
+    console.log(event, 'buttonclicked in geotray');
+    this.onPropertiesClicked = event;
     this.onPredefinedClicked = false;
     this.onClassifiedClicked = event;
     this.onBlendedClicked = false;
     this.onCollocatedClicked = false;
     this.onExtendedClicked = false;
-    console.log(this.onClassifiedClicked, "check classified")
-    
+    console.log(this.onClassifiedClicked, 'check classified');
   }
-  onBlendedClickedEvent(event){
-    console.log(event,"buttonclicked in geotray")
-    this.onPropertiesClicked =  event;
+  onBlendedClickedEvent(event) {
+    console.log(event, 'buttonclicked in geotray');
+    this.onPropertiesClicked = event;
     this.onPredefinedClicked = false;
     this.onClassifiedClicked = false;
     this.onBlendedClicked = event;
     this.onCollocatedClicked = false;
     this.onExtendedClicked = false;
-    console.log(this.onBlendedClicked, "check blendedd")
-    
+    console.log(this.onBlendedClicked, 'check blendedd');
   }
-  onCollocatedClickedEvent(event){
-    console.log(event,"buttonclicked in geotray")
-    this.onPropertiesClicked =  event;
+  onCollocatedClickedEvent(event) {
+    console.log(event, 'buttonclicked in geotray');
+    this.onPropertiesClicked = event;
     this.onPredefinedClicked = false;
     this.onClassifiedClicked = false;
     this.onBlendedClicked = false;
     this.onCollocatedClicked = event;
     this.onExtendedClicked = false;
-    console.log(this.onCollocatedClicked, "check collocatedd");
-    
+    console.log(this.onCollocatedClicked, 'check collocatedd');
   }
-  onExtendedClickedEvent(event){
-    console.log(event,"buttonclicked in geotray")
-    this.onPropertiesClicked =  event;
-    this.onPredefinedClicked =false;
+  onExtendedClickedEvent(event) {
+    console.log(event, 'buttonclicked in geotray');
+    this.onPropertiesClicked = event;
+    this.onPredefinedClicked = false;
     this.onClassifiedClicked = false;
     this.onBlendedClicked = false;
     this.onCollocatedClicked = false;
     this.onExtendedClicked = event;
-    console.log(this.onExtendedClicked, "check extended");
+    console.log(this.onExtendedClicked, 'check extended');
   }
-  onslopeClickedEvent(event){
+  onslopeClickedEvent(event) {
     this.onslopeClicked = event;
-    console.log(this.onslopeClicked, "check slope");
-
+    console.log(this.onslopeClicked, 'check slope');
   }
-  onbufferClickedEvent(event){
+  onbufferClickedEvent(event) {
     this.onbufferClicked = event;
-    console.log(this.onbufferClicked,"checkbuffer");
+    console.log(this.onbufferClicked, 'checkbuffer');
   }
   getFile(files: any, fileType: string) {
-    return Array.from(files).find( (file: any) => {
+    return Array.from(files).find((file: any) => {
       let fileExt = file.name.match(/\.[0-9a-z]+$/i);
       fileExt = fileExt ? fileExt[0] : '';
       return fileExt.toUpperCase() === fileType.toUpperCase();
@@ -517,7 +550,7 @@ amazonS3BucketName = 'test-gallery1';
       }
     });
     const prefix = '/fe_public/Administrative/prototype/';
-    if(!isduplicateFound) {
+    if (!isduplicateFound) {
       this.listFilesAndFolders('/', prefix.substring(prefix.indexOf('/') + 1));
     }
     /* new CloudFileSelectorComponent(this.commonService).listFilesAndFolders('/', prefix.substring(prefix.indexOf('/') + 1));
@@ -567,91 +600,102 @@ amazonS3BucketName = 'test-gallery1';
   }
   private setLayerToMap_StaticForPrototype(geoJson): any {
     const fill = new Fill({
-      color: 'rgba(255, 255, 255, 1)'
+      color: 'rgba(255, 255, 255, 1)',
     });
     const stroke = new Stroke({
       // color: '#319FD3',
       color: this.randomRainbowColor(0, 6),
-      width: 1
+      width: 1,
     });
     const style = new Style({
       image: new CircleStyle({
         fill,
         stroke,
-        radius: 5
+        radius: 5,
       }),
       fill,
       stroke,
     });
     const vectorSource = new VectorSource({
-      features: (new GeoJSON()).readFeatures(geoJson, {
+      features: new GeoJSON().readFeatures(geoJson, {
         // featureProjection: this.basemapProjection
-      })
+      }),
     });
-    vectorSource.getFeatures().forEach(feature => {
+    vectorSource.getFeatures().forEach((feature) => {
       const r = 0 + Math.floor(Math.random() * (255 - 0 + 1));
       const g = 0 + Math.floor(Math.random() * (255 - 0 + 1));
       const b = 0 + Math.floor(Math.random() * (255 - 0 + 1));
       const a = 0 + Math.floor(Math.random() * (255 - 0 + 1));
-      feature.setStyle(new Style({
-        image: new CircleStyle({
+      feature.setStyle(
+        new Style({
+          image: new CircleStyle({
+            fill: new Fill({
+              color: 'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')',
+            }),
+            stroke,
+            radius: 5,
+          }),
           fill: new Fill({
-            color: 'rgba('+r+', '+g+', '+b+', '+a+')'
+            color: 'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')',
           }),
           stroke,
-          radius: 5
-        }),
-        fill: new Fill({
-          color: 'rgba('+r+', '+g+', '+b+', '+a+')'
-        }),
-        stroke,
-      }));
+        })
+      );
     });
     const vectorLayer = new VectorLayer({
       source: vectorSource,
-      visible: false
+      visible: false,
     });
     vectorLayer.set('name', geoJson.fileName);
     vectorLayer.setOpacity(0.7);
     this.basemapService.getCurrentBasemap().addLayer(vectorLayer);
-    
   }
-  listFilesAndFolders(delimiter = '/', prefix = ''): void{
+  listFilesAndFolders(delimiter = '/', prefix = ''): void {
     console.log('In listAlbums');
     console.log(this);
     // this.s3.listObjectsV2({'Delimiter': '/', 'Prefix': 'file1/layers/'}, (err, data) => {
     /* this.fileListingStatus = 'loading';
     this.currentFilesList = []; */
-    this.s3.listObjectsV2({Delimiter: delimiter, Prefix: prefix}, (err, data) => {
-      console.log(err);
-      console.log(data);
-      const tempCurrentFiles = [];
-      if (err) {
-        /* this.currentFilesList = [];
+    this.s3.listObjectsV2(
+      { Delimiter: delimiter, Prefix: prefix },
+      (err, data) => {
+        console.log(err);
+        console.log(data);
+        const tempCurrentFiles = [];
+        if (err) {
+          /* this.currentFilesList = [];
         this.fileListingStatus = 'loaded'; */
-        return alert('There was an error listing your albums: ' + err.message);
-      } else {
-          const commonPrefixes: any [] = data.CommonPrefixes;
-          commonPrefixes.forEach(element => {
+          return alert(
+            'There was an error listing your albums: ' + err.message
+          );
+        } else {
+          const commonPrefixes: any[] = data.CommonPrefixes;
+          commonPrefixes.forEach((element) => {
             tempCurrentFiles.push({
               Type: 'Folder',
-              name: element.Prefix.substring(element.Prefix.indexOf(data.Prefix) + data.Prefix.length) // element.Prefix
+              name: element.Prefix.substring(
+                element.Prefix.indexOf(data.Prefix) + data.Prefix.length
+              ), // element.Prefix
             });
           });
-          const contents: any [] = data.Contents;
+          const contents: any[] = data.Contents;
           let index = 0;
-          contents.forEach(element => {
+          contents.forEach((element) => {
             // let isValidFile = false;
-            const fileName = element.Key.substring(element.Key.indexOf(data.Prefix) + data.Prefix.length);
-            if (element.Key.includes('.') /*&& element.Key.includes('.zip')*/){
+            const fileName = element.Key.substring(
+              element.Key.indexOf(data.Prefix) + data.Prefix.length
+            );
+            if (element.Key.includes('.') /*&& element.Key.includes('.zip')*/) {
               element.Type = 'File';
-              element.name =  fileName; // element.Key;
-              element.shortFileSize = ''// this.getFileSize(element.Size);
+              element.name = fileName; // element.Key;
+              element.shortFileSize = ''; // this.getFileSize(element.Size);
               element.extension = fileName.substring(fileName.lastIndexOf('.'));
               element.selected = false;
-              element.url = 'https://test-gallery1.s3.ap-southeast-1.amazonaws.com/fe_public/Administrative/prototype/' + fileName;
-              element.size = element.Size,
-              element.id = `${String(new Date().getTime())}_${index++}`;
+              element.url =
+                'https://test-gallery1.s3.ap-southeast-1.amazonaws.com/fe_public/Administrative/prototype/' +
+                fileName;
+              (element.size = element.Size),
+                (element.id = `${String(new Date().getTime())}_${index++}`);
               tempCurrentFiles.push(element);
             }
           });
@@ -665,13 +709,26 @@ amazonS3BucketName = 'test-gallery1';
               alertComponent: 'this.alertComponent',
               zip_file: zip,
               fileEvent: 'event',
-              // geobar: new GeobarComponent(this.basemapService, this.renderer, this.router, this.authObsr, 
-              //   this.commonService, this.geobarService, this.geoTowerService, this.geobaseService, 
-              //   this.notePadService, this.topicsService)
+              geobar: new GeobarComponent(
+                this.basemapService,
+                this.renderer,
+                this.router,
+                this.authObsr,
+                this.commonService,
+                this.geobarService,
+                this.geoTowerService,
+                this.geobaseService,
+                this.notePadService,
+                this.topicsService,
+                this.formBuilder,
+                this.observ,
+                this.myService
+              ),
             };
-            this.geobarService.activateEvent(eventOptions, 'AwsUrl'); 
+            this.geobarService.activateEvent(eventOptions, 'AwsUrl');
           });
+        }
       }
-    });
+    );
   }
 }

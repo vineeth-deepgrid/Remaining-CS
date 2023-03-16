@@ -699,6 +699,7 @@ export class GeobarComponent
     }
   }
   onSearch($event, inputValue): any {
+    console.log($event,"checkdollarevent")
     this.globalInputValue = this.searchValue;
     this.arrayObj = [];
     this.showFrameworkForm = false;
